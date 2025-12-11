@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TÍTULO NAVEGADOR -->
+    <title>Mystère Fragancias | Perfumería árabe en Mendoza</title>
+
+    <!-- SEO BÁSICO -->
+    <meta name="description"
+          content="Mystère Fragancias ✨ Perfumes árabes importados en Godoy Cruz, Mendoza. Fragancias para hombre, mujer y unisex, con asesoría personalizada y envíos.">
+
+    <meta name="keywords"
+          content="perfumes árabes, fragancias, mystere, perfumes mendoza, godoy cruz, club de nuit, bharara king, lattafa, afnan">
+
+    <meta name="author" content="Mystère Fragancias">
+
+    <!-- OPEN GRAPH (para WhatsApp, Instagram, Facebook, etc.) -->
+    <meta property="og:title" content="Mystère Fragancias | Perfumería árabe en Mendoza">
+    <meta property="og:description"
+          content="Somos amantes de la perfumería árabe. Te ayudamos a elegir tu fragancia ideal. Envíos y retiros en Godoy Cruz.">
+    <!-- Poné acá una imagen 1200x630 aprox -->
+    <meta property="og:image" content="https://TU-DOMINIO.com/img/og-mystere.jpg">
+    <meta property="og:url" content="https://TU-DOMINIO.com/">
+    <meta property="og:type" content="website">
+
+    <!-- TWITTER CARDS (opcional pero suma) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mystère Fragancias | Perfumería árabe en Mendoza">
+    <meta name="twitter:description"
+          content="Perfumes árabes importados. Fragancias intensas, elegantes y duraderas.">
+    <meta name="twitter:image" content="https://TU-DOMINIO.com/img/og-mystere.jpg">
+
+    <!-- FAVICON (paso 4) -->
+    <link rel="icon" type="image/png" href="img/favicon-mystere.png">
+    <!-- Para iPhone/iPad -->
+    <link rel="apple-touch-icon" href="img/favicon-mystere.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body>
+
+    <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo centered-logo">Mystère Fragancias</div>
+
+    <div class="cart-icon" id="openCart">🛒 <span id="cartCount">0</span></div>
+    <div id="addAlert" class="add-alert">Producto agregado al carrito ✔</div>
+
+</nav>
+
+
+
+
+    <!-- HERO SLIDER -->
+    <section class="hero-slider">
+
+        <div class="top-buttons">
+            <button onclick="filtrar('sale')">SALE</button>
+            <button onclick="filtrar('hombre')">Hombre</button>
+            <button onclick="filtrar('mujer')">Mujer</button>
+            <button onclick="filtrar('unisex')">Unisex</button>
+        </div>
+
+        <div class="slides">
+
+            <div class="slide active">
+                <img src="img/slide1.jpg">
+            </div>
+
+            <div class="slide">
+                <img src="img/slide2.jpg">
+            </div>
+
+            <div class="slide" onclick="filtrar('sale')" style="cursor:pointer;">
+    <img src="img/slide3.jpg" alt="Promos" />
+    <div class="slide-sale-text">🔥 Ver ofertas SALE 🔥</div>
+</div>
+
+
+        </div>
+
+        <div class="slide-btn prev" onclick="prevSlide()">❮</div>
+        <div class="slide-btn next" onclick="nextSlide()">❯</div>
+
+    </section>
+
+
+    <!-- CATÁLOGO -->
+    <section id="catalogo" class="section">
+        <h2>Catálogo</h2>
+        <div id="productsContainer"></div>
+    </section>
+
+
+  <!-- MODAL DEL CARRITO -->
+<div id="cartModal" class="cart-modal" style="display: none;">
+  <div class="cart-content">
+
+    <span id="closeCart" class="close-btn">&times;</span>
+
+    <h2>Tu pedido</h2>
+
+    <!-- ITEMS -->
+    <div id="cartItems"></div>
+
+    <!-- RESUMEN -->
+    <div class="cart-summary">
+
+        <p class="subtotal-line">Subtotal: <span id="cartSubtotal">$0</span></p>
+
+        <p class="discount-line" id="cartDiscountLine" style="display:none;">
+            Descuento aplicado: <span id="cartDiscountPercent"></span>%  
+            <span class="discount-amount">(-$<span id="cartDiscountValue"></span>)</span>
+        </p>
+
+        <p class="total-line">
+            TOTAL FINAL: <span id="cartTotal">$0</span>
+        </p>
+    </div>
+
+    <!-- CÓDIGO DE DESCUENTO -->
+    <div class="discount-box">
+        <input id="discountCode" type="text" placeholder="Código de descuento">
+        <button id="applyDiscount">Aplicar</button>
+    </div>
+
+    <!-- MÉTODO DE ENTREGA -->
+    <div class="shipping-box">
+
+        <div class="shipping-option selected" data-value="retiro">
+            <span class="ship-title">Retiro en punto de entrega</span>
+            <span class="ship-desc">Coordinamos por WhatsApp</span>
+        </div>
+
+        <div class="shipping-option" data-value="envio">
+            <span class="ship-title">Envío a domicilio</span>
+            <span class="ship-desc">Costo según zona</span>
+        </div>
+
+        <input type="hidden" id="shippingMethod" value="retiro">
+    </div>
+
+    <!-- BOTONES DE PAGO -->
+    <button id="payCash" class="cash-btn">Pagar en efectivo (coordinar por WhatsApp)</button>
+    <button id="payMP" class="mp-btn">Pagar con Mercado Pago</button>
+
+  </div> <!-- cart-content -->
+</div> <!-- cartModal -->
+
+
+<!-- SCRIPTS -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+        <p>Godoy Cruz, Mendoza</p>
+
+        <p>
+            <a href="https://wa.me/542615161952" target="_blank">WhatsApp: 2615161952</a>
+        </p>
+
+        <p>
+            <a href="https://instagram.com/mystere.fragancias" target="_blank">
+                Instagram: @mystere.fragancias
+            </a>
+        </p>
+
+        <ul class="footer-links">
+            <li><a href="faq.html">Preguntas Frecuentes</a></li>
+            <li><a href="politicas.html">Políticas de cambios y envíos</a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- CHAT BOT -->
+
+    <!-- CHATBOT (DEBE IR ANTES DEL SCRIPT) -->
+    <button id="chatbot-open" class="bot-btn">
+        🧞‍♂️ Ayuda a elegir un perfume
+    </button>
+
+    <div id="chatbot-window">
+        <div id="chatbot-header">
+            Asesor Virtual – Mystère Fragancias
+            <span id="chatbot-close">✖</span>
+        </div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-input-box">
+            <input id="chatbot-input" type="text" placeholder="Escribe tu consulta..." />
+            <button id="chatbot-send">Enviar</button>
+        </div>
+    </div>
+
+    <!-- EL SCRIPT VA **ÚLTIMO** -->
+    <script src="script.js"></script>
+
+</body>
+</html>

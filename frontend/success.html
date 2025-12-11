@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago Exitoso - Mystère Fragancias</title>
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #f5efe7;
+            color: #5a4633;
+            text-align: center;
+            padding: 60px;
+        }
+        .box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 450px;
+            margin: auto;
+            border: 1px solid #d9c8b6;
+        }
+        h1 { color: #8c5e3c; }
+        a{
+            display: inline-block;
+            padding: 12px 18px;
+            background: #8c5e3c;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        a:hover { background: #6e472d; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>¡Pago aprobado! ✔</h1>
+    <p>Gracias por tu compra en Mystère Fragancias.</p>
+
+    <p>Estamos preparando tu pedido y te enviaremos un mensaje en breve.</p>
+
+    <a href="index.html">Volver a la tienda</a>
+</div>
+<script>
+const pedido = localStorage.getItem("lastOrder");
+
+if (pedido) {
+    window.open(`https://wa.me/2615161952?text=¡Pago confirmado!%0A%0A${pedido}`);
+}
+</script>
+
+</body>
+</html>

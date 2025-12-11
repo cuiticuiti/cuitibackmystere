@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos - Panel Admin</title>
+    
+
+
+    <style>
+        #filtros button {
+    background:#d7c2aa;
+    color:#4e321f;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+}
+#filtros button.activo {
+    background:#8c5e3c;
+    color:white;
+}
+        body {
+            font-family: Poppins, sans-serif;
+            background: #f8f4ee;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #8c5e3c;
+            margin-bottom: 5px;
+        }
+
+        a button {
+            margin-bottom: 20px;
+            background: #8c5e3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #d2bda5;
+            padding: 10px;
+        }
+
+        th {
+            background: #ebdfd1;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .btn-estado {
+            background: #6e472d;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #b44444;
+            color: white;
+        }
+
+        .detalle-box {
+            background: #f7efe7;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>Pedidos Recibidos</h1>
+
+<button onclick="window.location.href='/admin-panel.html'">← Volver al Panel</button>
+
+<!-- 🔎 FILTROS -->
+<div id="filtros" style="margin:15px 0; display:flex; gap:10px; flex-wrap:wrap;">
+    <!-- Tabs de tipo -->
+    <button onclick="cambiarTab('todos')"  id="tab-todos">Todos</button>
+    <button onclick="cambiarTab('recientes')" id="tab-recientes">Pedidos recientes</button>
+    <button onclick="cambiarTab('terminados')" id="tab-terminados">Terminados</button>
+
+    <!-- Búsqueda -->
+    <input id="f-buscar" placeholder="Buscar por ID o producto" onkeyup="aplicarFiltros()">
+
+    <!-- Filtro por método de pago -->
+    <select id="f-metodo" onchange="aplicarFiltros()">
+        <option value="">Método pago</option>
+        <option value="MERCADO_PAGO">Mercado Pago</option>
+        <option value="EFECTIVO">Efectivo</option>
+    </select>
+
+    <!-- Filtro por estado -->
+    <select id="f-estado" onchange="aplicarFiltros()">
+        <option value="">Estado</option>
+        <option value="PENDIENTE">Pendiente</option>
+        <option value="PAGADO">Pagado</option>
+        <option value="ENTREGADO">Entregado</option>
+    </select>
+</div>
+
+<table id="tablaPedidos">
+    <thead>
+    <tr>
+        <th onclick="cambiarOrden('id')">ID ⬍</th>
+<th onclick="cambiarOrden('fecha')">Fecha ⬍</th>
+<th onclick="cambiarOrden('total')">Total ⬍</th>
+<th onclick="cambiarOrden('descuento')">Descuento ⬍</th>
+<th>Método Pago</th>
+<th>Estado</th>
+<th>Detalle</th>
+<th>Acciones</th>
+
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+
+<script>
+    let pedidosTodos = [];      // todos los pedidos que vienen del backend
+let tabActual = "recientes";
+let ordenCampo = "fecha";
+let ordenAsc = false;
+function cambiarTab(tab) {
+    tabActual = tab;
+
+    // marcar botón activo
+    document.getElementById("tab-todos").classList.remove("activo");
+    document.getElementById("tab-recientes").classList.remove("activo");
+    document.getElementById("tab-terminados").classList.remove("activo");
+
+    document.getElementById("tab-" + tab).classList.add("activo");
+
+    aplicarFiltros();
+}
+
+// arrancamos en "recientes"
+window.addEventListener("load", () => {
+    document.getElementById("tab-recientes").classList.add("activo");
+});
+function aplicarFiltros() {
+    let lista = [...pedidosTodos];
+
+    // 1) filtro por tab
+    if (tabActual === "recientes") {
+        // todo lo que NO esté ENTREGADO
+        lista = lista.filter(p => p.estado !== "ENTREGADO");
+    } else if (tabActual === "terminados") {
+        lista = lista.filter(p => p.estado === "ENTREGADO");
+    }
+
+    // 2) filtros por inputs
+    const busc = document.getElementById("f-buscar").value.toLowerCase();
+    const metodo = document.getElementById("f-metodo").value;
+    const estado = document.getElementById("f-estado").value;
+
+    lista = lista.filter(p => {
+        const coincideBusqueda =
+            p.id.toString().includes(busc) ||
+            (p.detalle && p.detalle.toLowerCase().includes(busc));
+
+        const coincideMetodo = metodo === "" || p.metodoPago === metodo;
+        const coincideEstado = estado === "" || p.estado === estado;
+
+        return coincideBusqueda && coincideMetodo && coincideEstado;
+    });
+
+    // 3) orden
+    lista.sort((a, b) => {
+        let va = a[ordenCampo];
+        let vb = b[ordenCampo];
+
+        // fecha: string -> comparar directamente
+        if (ordenCampo === "total" || ordenCampo === "descuento") {
+            va = va ?? 0;
+            vb = vb ?? 0;
+        }
+
+        if (va < vb) return ordenAsc ? -1 : 1;
+        if (va > vb) return ordenAsc ? 1 : -1;
+        return 0;
+    });
+
+    renderPedidos(lista);
+}
+
+
+// =============================
+// VALIDAR LOGIN
+// =============================
+if (!localStorage.getItem("admin")) {
+    window.location.href = "admin-login.html";
+}
+
+
+// =============================
+// CARGAR PEDIDOS
+// =============================
+async function cargarPedidos() {
+    const res = await fetch("http://localhost:8085/api/admin/pedidos");
+    pedidosTodos = await res.json();
+
+    aplicarFiltros();   // ya no llamamos directamente a renderPedidos
+}
+
+
+cargarPedidos();
+
+
+// =============================
+// RENDER TABLA
+// =============================
+function renderPedidos(pedidos) {
+
+    const tbody = document.querySelector("#tablaPedidos tbody");
+    tbody.innerHTML = "";
+
+    pedidos.forEach(p => {
+
+        let detalleTexto = "";
+
+        try {
+            const productos = JSON.parse(p.detalle);
+            detalleTexto = productos.map(i => `• ${i.title} x${i.quantity} ($${i.total})`).join("<br>");
+        } catch (e) {
+            detalleTexto = p.detalle;
+        }
+
+        tbody.innerHTML += `
+            <tr>
+
+                <td>${p.id}</td>
+                <td>${p.fecha?.replace("T", " ")}</td>
+                <td>$${p.total}</td>
+                <td>$${p.descuento ?? 0}</td>
+                <td>${p.metodoPago}</td>
+
+                <td>
+                    <strong>${p.estado}</strong><br>
+                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'PENDIENTE')">Pendiente</button>
+                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'PAGADO')">Pagado</button>
+                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'ENTREGADO')">Entregado</button>
+                </td>
+
+                <td>
+                    <div class="detalle-box">${detalleTexto}</div>
+                </td>
+
+                <td>
+    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'ENTREGADO')">
+        Terminar pedido
+    </button>
+    <br><br>
+    <button class="btn-delete" onclick="borrarPedido(${p.id})">Eliminar</button>
+</td>
+
+
+            </tr>
+        `;
+    });
+}
+
+
+// =============================
+// CAMBIAR ESTADO
+// =============================
+async function cambiarEstado(id, estado) {
+    await fetch(`http://localhost:8085/api/admin/pedidos/${id}/estado?estado=${estado}`, {
+        method: "PUT"
+    });
+
+    alert("Estado actualizado");
+    cargarPedidos();
+}
+
+
+// =============================
+// BORRAR
+// =============================
+async function borrarPedido(id) {
+    if (!confirm("¿Seguro que querés borrar este pedido?")) return;
+
+    await fetch(`http://localhost:8085/api/admin/pedidos/${id}`, {
+        method: "DELETE"
+    });
+
+    alert("Pedido borrado");
+    cargarPedidos();
+}
+
+</script>
+
+</body>
+</html>

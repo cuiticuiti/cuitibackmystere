@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - Mystère</title>
+
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #f8f4ee;
+            padding: 20px;
+        }
+
+        h1 { color: #8c5e3c; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #d2bda5;
+            padding: 10px;
+        }
+
+        th { background: #ebdfd1; }
+
+        button {
+            padding: 6px 12px;
+            background: #8c5e3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover { background: #6e472d; }
+
+        .crear-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #d2bda5;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            padding: 7px;
+            border-radius: 6px;
+            border: 1px solid #bfa68f;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Panel de Administración
+    <a href="admin-pedidos.html">
+  <button style="margin-top:20px;">Ver Pedidos</button>
+</a>
+<button onclick="window.location.href='admin-codigos.html'">
+    Códigos de descuento
+</button>
+
+</h1>
+
+<button onclick="logout()">Cerrar sesión</button>
+
+
+<!-- ============================= -->
+<!--  CREAR PRODUCTO NUEVO        -->
+<!-- ============================= -->
+
+<h2>Crear Producto Nuevo</h2>
+
+<div class="crear-box">
+
+    <input id="nombre" placeholder="Nombre">
+    <input id="precio" placeholder="Precio" type="number">
+    <input id="precioAntes" placeholder="Precio antes (sale)" type="number">
+    <input id="stock" placeholder="Stock" type="number">
+    <input id="imagen" placeholder="Ruta imagen (img/...)" style="width:300px">
+
+    <select id="genero">
+        <option value="hombre">Hombre</option>
+        <option value="mujer">Mujer</option>
+        <option value="unisex">Unisex</option>
+    </select>
+
+    <label><input type="checkbox" id="sale"> SALE</label>
+
+    <button onclick="crearProducto()">Guardar</button>
+</div>
+
+
+<!-- ============================= -->
+<!--      TABLA DE PRODUCTOS      -->
+<!-- ============================= -->
+
+<h2>Listado de Productos</h2>
+
+<table id="tabla">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Género</th>
+        <th>Precio actual</th>
+        <th>Precio anterior</th>
+        <th>Stock</th>
+        <th>Imagen</th>
+        <th>SALE</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+
+<script>
+// ================================
+// VALIDAR LOGIN
+// ================================
+
+if (!localStorage.getItem("admin")) {
+    window.location.href = "admin-login.html";
+}
+
+
+// ================================
+// CARGAR PRODUCTOS
+// ================================
+
+async function cargarProductos() {
+    const res = await fetch("http://localhost:8085/api/admin/productos");
+    const datos = await res.json();
+    renderTabla(datos);
+}
+
+cargarProductos();
+
+
+// ================================
+// RENDERIZAR TABLA
+// ================================
+
+function renderTabla(items) {
+    const tbody = document.querySelector("#tabla tbody");
+    tbody.innerHTML = "";
+
+    items.forEach(p => {
+
+        tbody.innerHTML += `
+        <tr>
+
+            <td>${p.id}</td>
+
+            <td><input id="nombre-${p.id}" value="${p.nombre}"></td>
+
+            <td>
+                <select id="genero-${p.id}">
+                    <option value="hombre" ${p.genero === "hombre" ? "selected" : ""}>Hombre</option>
+                    <option value="mujer" ${p.genero === "mujer" ? "selected" : ""}>Mujer</option>
+                    <option value="unisex" ${p.genero === "unisex" ? "selected" : ""}>Unisex</option>
+                </select>
+            </td>
+
+            <td><input id="precio-${p.id}" type="number" value="${p.precio}"></td>
+
+            <td><input id="precioAntes-${p.id}" type="number" value="${p.precioAntes ?? ''}"></td>
+
+            <td><input id="stock-${p.id}" type="number" value="${p.stock}"></td>
+
+            <td><input id="imagen-${p.id}" value="${p.imagen}" style="width:200px"></td>
+
+            <td><input id="sale-${p.id}" type="checkbox" ${p.sale ? "checked" : ""}></td>
+
+            <td>
+                <button onclick="guardar(${p.id})">Guardar</button>
+                <button onclick="eliminar(${p.id})" style="background:#b44444">Eliminar</button>
+            </td>
+
+        </tr>`;
+    });
+}
+
+
+// ================================
+// CREAR PRODUCTO
+// ================================
+
+async function crearProducto() {
+    const nuevo = {
+        nombre: document.getElementById("nombre").value,
+        precio: +document.getElementById("precio").value,
+        precioAntes: +document.getElementById("precioAntes").value || null,
+        stock: +document.getElementById("stock").value,
+        imagen: document.getElementById("imagen").value,
+        genero: document.getElementById("genero").value,
+        sale: document.getElementById("sale").checked
+    };
+
+    await fetch("http://localhost:8085/api/admin/productos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevo)
+    });
+
+    alert("Producto creado");
+    cargarProductos();
+}
+
+
+// ================================
+// GUARDAR CAMBIOS
+// ================================
+
+async function guardar(id) {
+
+    const producto = {
+        nombre: document.getElementById(`nombre-${id}`).value,
+        genero: document.getElementById(`genero-${id}`).value,
+        precio: +document.getElementById(`precio-${id}`).value,
+        precioAntes: +document.getElementById(`precioAntes-${id}`).value || null,
+        stock: +document.getElementById(`stock-${id}`).value,
+        imagen: document.getElementById(`imagen-${id}`).value,
+        sale: document.getElementById(`sale-${id}`).checked
+    };
+
+    await fetch(`http://localhost:8085/api/admin/productos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(producto)
+    });
+
+    alert("Producto actualizado");
+}
+
+
+// ================================
+// ELIMINAR
+// ================================
+
+async function eliminar(id) {
+    if (!confirm("¿Seguro que querés eliminar este producto?")) return;
+
+    await fetch(`http://localhost:8085/api/admin/productos/${id}`, {
+        method: "DELETE"
+    });
+
+    alert("Producto eliminado");
+    cargarProductos();
+}
+
+
+// ================================
+// LOGOUT
+// ================================
+
+function logout() {
+    localStorage.removeItem("admin");
+    window.location.href = "admin-login.html";
+}
+
+</script>
+
+</body>
+</html>

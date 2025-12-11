@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar Códigos de Descuento</title>
+
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #f8f4ee;
+            padding: 20px;
+        }
+
+        h1 { color: #8c5e3c; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #d2bda5;
+        }
+
+        th { background: #ebdfd1; }
+
+        button {
+            background: #8c5e3c;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .danger {
+            background: #b44444;
+        }
+
+        .box {
+            background: white;
+            padding: 15px;
+            border: 1px solid #d2bda5;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 7px;
+            border: 1px solid #bfa68f;
+            border-radius: 6px;
+            width: 180px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Códigos de Descuento</h1>
+
+<a href="admin-panel.html"><button>← Volver al Panel</button></a>
+
+<h2>Crear Nuevo Código</h2>
+
+<div class="box">
+    <input id="codigo" placeholder="Código">
+    <input id="porcentaje" placeholder="% Descuento" type="number">
+    <input id="maximos" placeholder="Usos Máximos" type="number">
+    <button onclick="crear()">Crear</button>
+</div>
+
+<h2>Listado de Códigos</h2>
+
+<table id="tabla">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Código</th>
+        <th>% OFF</th>
+        <th>Usos Máximos</th>
+        <th>Usos Actuales</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+
+if (!localStorage.getItem("admin")) {
+    window.location.href = "admin-login.html";
+}
+
+async function cargar() {
+    const res = await fetch("http://localhost:8085/api/admin/descuentos");
+    const lista = await res.json();
+    render(lista);
+}
+
+cargar();
+
+function render(lista) {
+    const tbody = document.querySelector("#tabla tbody");
+    tbody.innerHTML = "";
+
+    lista.forEach(c => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${c.id}</td>
+            <td><input id="cod-${c.id}" value="${c.codigo}"></td>
+            <td><input id="por-${c.id}" value="${c.porcentaje}" type="number"></td>
+            <td><input id="max-${c.id}" value="${c.usosMaximos}" type="number"></td>
+            <td><input id="act-${c.id}" value="${c.usosActuales}" type="number"></td>
+            <td>
+                <button onclick="guardar(${c.id})">Guardar</button>
+                <button class="danger" onclick="borrar(${c.id})">Eliminar</button>
+            </td>
+        </tr>`;
+    });
+}
+
+async function crear() {
+    const body = {
+        codigo: document.getElementById("codigo").value,
+        porcentaje: +document.getElementById("porcentaje").value,
+        usosMaximos: +document.getElementById("maximos").value
+    };
+
+    await fetch("http://localhost:8085/api/admin/descuentos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+
+    alert("Código creado");
+    cargar();
+}
+
+async function guardar(id) {
+    const body = {
+        codigo: document.getElementById(`cod-${id}`).value,
+        porcentaje: +document.getElementById(`por-${id}`).value,
+        usosMaximos: +document.getElementById(`max-${id}`).value,
+        usosActuales: +document.getElementById(`act-${id}`).value
+    };
+
+    await fetch(`http://localhost:8085/api/admin/descuentos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+
+    alert("Actualizado");
+    cargar();
+}
+
+async function borrar(id) {
+    if (!confirm("¿Seguro que querés eliminarlo?")) return;
+
+    await fetch(`http://localhost:8085/api/admin/descuentos/${id}`, {
+        method: "DELETE"
+    });
+
+    alert("Eliminado");
+    cargar();
+}
+async function cargarCodigos() {
+    const res = await fetch("http://localhost:8085/api/descuentos");
+    const lista = await res.json();
+    console.log(lista);
+}
+
+</script>
+
+</body>
+</html>
