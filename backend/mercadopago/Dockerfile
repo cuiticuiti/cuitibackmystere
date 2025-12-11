@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-# 🔥 ESTA LÍNEA ES LA CLAVE
-RUN chmod +x gradlew
+# 🔥 FORZAMOS permisos sí o sí
+RUN chmod 755 gradlew
 
 RUN ./gradlew build -x test
 
