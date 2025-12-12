@@ -2,6 +2,7 @@
 // CONFIGURACIÓN
 // =========================
 const PHONE = "2615161952";
+console.log("SCRIPT CARGADO OK");
 
 // =========================
 // REFERENCIAS AL DOM
@@ -195,8 +196,10 @@ function addToCart(i) {
 // =========================
 // CARRITO
 // =========================
-openCartBtn.onclick = () => cartModal.style.display = "block";
-closeCartBtn.onclick = () => cartModal.style.display = "none";
+if (openCartBtn && closeCartBtn && cartModal) {
+    openCartBtn.onclick = () => cartModal.style.display = "block";
+    closeCartBtn.onclick = () => cartModal.style.display = "none";
+}
 
 function renderCart() {
     cartItems.innerHTML = "";
@@ -365,11 +368,7 @@ document.querySelector(".hero-slider").addEventListener("touchend", e => {
 });
 
 
-    const data = await res.json();
-    const reply = data.choices[0].message.content;
-
-    appendBotMessage("bot", reply);
-}
+  
 
 function appendBotMessage(who, text) {
     const chat = document.getElementById("botChat");
