@@ -7,9 +7,8 @@ COPY . .
 RUN chmod +x gradlew
 RUN ./gradlew bootJar -x test
 
-RUN ls -l build/libs
-
-COPY build/libs/*.jar app.jar
+# mover el jar generado a app.jar
+RUN mv build/libs/*.jar app.jar
 
 EXPOSE 8080
 
