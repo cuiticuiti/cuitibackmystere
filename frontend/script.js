@@ -6,6 +6,8 @@ const PHONE = "2615161952";
 // =========================
 // REFERENCIAS AL DOM
 // =========================
+const API_URL = "https://cuitibackmystere.onrender.com";
+
 const container      = document.getElementById("productsContainer");
 const cartModal      = document.getElementById("cartModal");
 const openCartBtn    = document.getElementById("openCart");
@@ -32,7 +34,8 @@ let discount = 0;
 // =========================
 async function cargarProductos() {
     try {
-        const res = await fetch("http://localhost:8085/api/productos");
+        const res = await fetch(`${API_URL}/api/productos`);
+
         products = await res.json();
         renderProducts();
     } catch (e) {
@@ -299,7 +302,8 @@ const envio = document.querySelector('input[name="envio"]:checked')?.value || "r
         price: Math.round(i.price * (1 - discount))
     })) };
 
-    const res = await fetch("http://localhost:8085/api/pay/create", {
+   const res = await fetch(`${API_URL}/api/pay/create`, {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -359,27 +363,7 @@ document.querySelector(".hero-slider").addEventListener("touchend", e => {
     if (startX - endX > 60) nextSlide();
     if (endX - startX > 60) prevSlide();
 });
-async function sendBot() {
-    const msg = document.getElementById("botInput").value.trim();
-    if (!msg) return;
 
-    appendBotMessage("usuario", msg);
-    document.getElementById("botInput").value = "";
-
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer TU_API_KEY"
-        },
-        body: JSON.stringify({
-            model: "gpt-4.1-mini",
-            messages: [
-                { role: "system", content: "Sos un asesor experto de perfumería árabe para la tienda Mystère Fragancias. Recomendá perfumes del siguiente catálogo cuando puedas." },
-                { role: "user", content: msg }
-            ]
-        })
-    });
 
     const data = await res.json();
     const reply = data.choices[0].message.content;
@@ -428,7 +412,8 @@ async function enviarPregunta() {
 
     addMessage("Escribiendo...", "bot");
 
-    const res = await fetch("http://localhost:8085/api/bot/consultar", {
+    const res = await fetch(`${API_URL}/api/bot/consultar`, {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pregunta })
