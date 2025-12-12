@@ -1,12 +1,10 @@
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
 COPY . .
 
-# 🔥 FORZAMOS permisos sí o sí
-RUN chmod 755 gradlew
-
+RUN chmod +x gradlew
 RUN ./gradlew build -x test
 
 COPY build/libs/*.jar app.jar
