@@ -134,14 +134,21 @@ if (!localStorage.getItem("admin")) {
 // CARGAR PRODUCTOS
 // ================================
 
-async function cargarProductos() {
-    fetch(`${API_URL}/api/admin/productos`);
+const API_URL = "https://cuitibackmystere.onrender.com";
 
-    const datos = await res.json();
-    renderTabla(datos);
+async function cargarProductos() {
+    try {
+        const res = await fetch(`${API_URL}/api/admin/productos`);
+        const datos = await res.json();
+        renderTabla(datos);
+    } catch (e) {
+        console.error("Error cargando productos:", e);
+        alert("No se pudieron cargar los productos");
+    }
 }
 
 cargarProductos();
+
 
 
 // ================================
