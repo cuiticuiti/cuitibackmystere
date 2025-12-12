@@ -441,3 +441,10 @@ function cambiarOrden(campo) {
     }
     aplicarFiltros();
 }
+window.filtrar = filtrar;
+window.changeQty = changeQty;
+window.addToCart = addToCart;
+window.consultarEncargo = consultarEncargo;
+window.nextSlide = nextSlide;
+window.prevSlide = prevSlide;
+
