@@ -119,6 +119,8 @@
 
 
 <script>
+    const API_URL = "https://cuitibackmystere.onrender.com";
+
 // ================================
 // VALIDAR LOGIN
 // ================================
@@ -133,7 +135,8 @@ if (!localStorage.getItem("admin")) {
 // ================================
 
 async function cargarProductos() {
-    const res = await fetch("http://localhost:8085/api/admin/productos");
+    fetch(`${API_URL}/api/admin/productos`);
+
     const datos = await res.json();
     renderTabla(datos);
 }
@@ -201,7 +204,8 @@ async function crearProducto() {
         sale: document.getElementById("sale").checked
     };
 
-    await fetch("http://localhost:8085/api/admin/productos", {
+   await fetch(`${API_URL}/api/admin/productos`, {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevo)
@@ -228,7 +232,8 @@ async function guardar(id) {
         sale: document.getElementById(`sale-${id}`).checked
     };
 
-    await fetch(`http://localhost:8085/api/admin/productos/${id}`, {
+   await fetch(`${API_URL}/api/admin/productos/${id}`, {
+
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(producto)
@@ -245,7 +250,8 @@ async function guardar(id) {
 async function eliminar(id) {
     if (!confirm("¿Seguro que querés eliminar este producto?")) return;
 
-    await fetch(`http://localhost:8085/api/admin/productos/${id}`, {
+    await fetch(`${API_URL}/api/admin/productos/${id}`, {
+
         method: "DELETE"
     });
 
