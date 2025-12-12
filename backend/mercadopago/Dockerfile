@@ -5,7 +5,9 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x gradlew
-RUN ./gradlew build -x test
+RUN ./gradlew bootJar -x test
+
+RUN ls -l build/libs
 
 COPY build/libs/*.jar app.jar
 
