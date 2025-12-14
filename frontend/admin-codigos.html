@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Administrar Códigos de Descuento</title>
@@ -88,19 +89,29 @@
 </table>
 
 <script>
+const API_URL = "https://cuitibackmystere.onrender.com";
 
+// ================================
+// VALIDAR LOGIN
+// ================================
 if (!localStorage.getItem("admin")) {
     window.location.href = "admin-login.html";
 }
 
+// ================================
+// CARGAR CÓDIGOS
+// ================================
 async function cargar() {
-    const res = await fetch("http://localhost:8085/api/admin/descuentos");
+    const res = await fetch(`${API_URL}/api/admin/descuentos`);
     const lista = await res.json();
     render(lista);
 }
 
 cargar();
 
+// ================================
+// RENDER TABLA
+// ================================
 function render(lista) {
     const tbody = document.querySelector("#tabla tbody");
     tbody.innerHTML = "";
@@ -121,6 +132,9 @@ function render(lista) {
     });
 }
 
+// ================================
+// CREAR CÓDIGO
+// ================================
 async function crear() {
     const body = {
         codigo: document.getElementById("codigo").value,
@@ -128,7 +142,7 @@ async function crear() {
         usosMaximos: +document.getElementById("maximos").value
     };
 
-    await fetch("http://localhost:8085/api/admin/descuentos", {
+    await fetch(`${API_URL}/api/admin/descuentos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -138,6 +152,9 @@ async function crear() {
     cargar();
 }
 
+// ================================
+// GUARDAR CAMBIOS
+// ================================
 async function guardar(id) {
     const body = {
         codigo: document.getElementById(`cod-${id}`).value,
@@ -146,7 +163,7 @@ async function guardar(id) {
         usosActuales: +document.getElementById(`act-${id}`).value
     };
 
-    await fetch(`http://localhost:8085/api/admin/descuentos/${id}`, {
+    await fetch(`${API_URL}/api/admin/descuentos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -156,23 +173,21 @@ async function guardar(id) {
     cargar();
 }
 
+// ================================
+// BORRAR
+// ================================
 async function borrar(id) {
     if (!confirm("¿Seguro que querés eliminarlo?")) return;
 
-    await fetch(`http://localhost:8085/api/admin/descuentos/${id}`, {
+    await fetch(`${API_URL}/api/admin/descuentos/${id}`, {
         method: "DELETE"
     });
 
     alert("Eliminado");
     cargar();
 }
-async function cargarCodigos() {
-    const res = await fetch("http://localhost:8085/api/descuentos");
-    const lista = await res.json();
-    console.log(lista);
-}
-
 </script>
+
 
 </body>
 </html>
