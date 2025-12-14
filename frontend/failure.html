@@ -22,6 +22,12 @@
 
 </div>
 <a href="index.html?cart=open">Volver al carrito</a>
+<script>
+if (localStorage.getItem("forceCart") === "1") {
+  localStorage.removeItem("forceCart");
+  document.getElementById("cartModal").style.display = "block";
+}
+
 
 
 
