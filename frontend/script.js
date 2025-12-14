@@ -296,29 +296,30 @@ async function pagar() {
 
     const items = agruparItems();
 
-const envio = document.querySelector('input[name="envio"]:checked')?.value || "retiro";
+    const resumen = items
+        .map(i => `• ${i.title} x${i.quantity} ($${i.total})`)
+        .join("\n");
 
+    localStorage.setItem("lastOrder", resumen);
 
-    let body = { items: items.map(i => ({
-        title: i.title,
-        quantity: i.quantity,
-        price: Math.round(i.price * (1 - discount))
-    })) };
+    const body = {
+        items: items.map(i => ({
+            title: i.title,
+            quantity: i.quantity,
+            price: Math.round(i.price * (1 - discount))
+        }))
+    };
 
-   const res = await fetch(`${API_URL}/api/pay/create`, {
-
+    const res = await fetch(`${API_URL}/api/pay/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
 
     const data = await res.json();
-
-    if (!data.init_point && !data.initPoint)
-        return alert("Error generando pago.");
-
-    window.location.href = data.init_point || data.initPoint;
+    window.location.href = data.init_point;
 }
+
 
 // =========================
 // UTILIDADES
