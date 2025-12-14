@@ -256,11 +256,12 @@ document.querySelectorAll(".shipping-option").forEach(op => {
 
 
 
-function removeItem(i) {
-    cart.splice(i, 1);
+function removeItem(index) {
+    cart.splice(index, 1);
     cartCountSpan.textContent = cart.length;
     renderCart();
 }
+
 
 // =========================
 // WHATSAPP EFECTIVO
