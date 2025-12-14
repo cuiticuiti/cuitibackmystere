@@ -131,177 +131,78 @@
 
 
 <script>
-    let pedidosTodos = [];      // todos los pedidos que vienen del backend
-let tabActual = "recientes";
-let ordenCampo = "fecha";
-let ordenAsc = false;
-function cambiarTab(tab) {
-    tabActual = tab;
+const API_URL = "https://cuitibackmystere.onrender.com";
 
-    // marcar botón activo
-    document.getElementById("tab-todos").classList.remove("activo");
-    document.getElementById("tab-recientes").classList.remove("activo");
-    document.getElementById("tab-terminados").classList.remove("activo");
-
-    document.getElementById("tab-" + tab).classList.add("activo");
-
-    aplicarFiltros();
-}
-
-// arrancamos en "recientes"
-window.addEventListener("load", () => {
-    document.getElementById("tab-recientes").classList.add("activo");
-});
-function aplicarFiltros() {
-    let lista = [...pedidosTodos];
-
-    // 1) filtro por tab
-    if (tabActual === "recientes") {
-        // todo lo que NO esté ENTREGADO
-        lista = lista.filter(p => p.estado !== "ENTREGADO");
-    } else if (tabActual === "terminados") {
-        lista = lista.filter(p => p.estado === "ENTREGADO");
-    }
-
-    // 2) filtros por inputs
-    const busc = document.getElementById("f-buscar").value.toLowerCase();
-    const metodo = document.getElementById("f-metodo").value;
-    const estado = document.getElementById("f-estado").value;
-
-    lista = lista.filter(p => {
-        const coincideBusqueda =
-            p.id.toString().includes(busc) ||
-            (p.detalle && p.detalle.toLowerCase().includes(busc));
-
-        const coincideMetodo = metodo === "" || p.metodoPago === metodo;
-        const coincideEstado = estado === "" || p.estado === estado;
-
-        return coincideBusqueda && coincideMetodo && coincideEstado;
-    });
-
-    // 3) orden
-    lista.sort((a, b) => {
-        let va = a[ordenCampo];
-        let vb = b[ordenCampo];
-
-        // fecha: string -> comparar directamente
-        if (ordenCampo === "total" || ordenCampo === "descuento") {
-            va = va ?? 0;
-            vb = vb ?? 0;
-        }
-
-        if (va < vb) return ordenAsc ? -1 : 1;
-        if (va > vb) return ordenAsc ? 1 : -1;
-        return 0;
-    });
-
-    renderPedidos(lista);
-}
-
-
-// =============================
-// VALIDAR LOGIN
-// =============================
 if (!localStorage.getItem("admin")) {
     window.location.href = "admin-login.html";
 }
 
+let pedidosTodos = [];
+let tabActual = "recientes";
+let ordenCampo = "fecha";
+let ordenAsc = false;
 
-// =============================
-// CARGAR PEDIDOS
-// =============================
 async function cargarPedidos() {
-    const res = await fetch("http://localhost:8085/api/admin/pedidos");
+    const res = await fetch(`${API_URL}/api/admin/pedidos`);
     pedidosTodos = await res.json();
-
-    aplicarFiltros();   // ya no llamamos directamente a renderPedidos
+    aplicarFiltros();
 }
-
-
 cargarPedidos();
 
+function cambiarTab(tab) {
+    tabActual = tab;
+    document.querySelectorAll("#filtros button").forEach(b => b.classList.remove("activo"));
+    document.getElementById("tab-"+tab).classList.add("activo");
+    aplicarFiltros();
+}
 
-// =============================
-// RENDER TABLA
-// =============================
+function aplicarFiltros() {
+    let lista = [...pedidosTodos];
+
+    if (tabActual === "recientes") lista = lista.filter(p => p.estado !== "ENTREGADO");
+    if (tabActual === "terminados") lista = lista.filter(p => p.estado === "ENTREGADO");
+
+    renderPedidos(lista);
+}
+
 function renderPedidos(pedidos) {
-
     const tbody = document.querySelector("#tablaPedidos tbody");
     tbody.innerHTML = "";
 
     pedidos.forEach(p => {
-
-        let detalleTexto = "";
-
-        try {
-            const productos = JSON.parse(p.detalle);
-            detalleTexto = productos.map(i => `• ${i.title} x${i.quantity} ($${i.total})`).join("<br>");
-        } catch (e) {
-            detalleTexto = p.detalle;
-        }
-
         tbody.innerHTML += `
-            <tr>
-
-                <td>${p.id}</td>
-                <td>${p.fecha?.replace("T", " ")}</td>
-                <td>$${p.total}</td>
-                <td>$${p.descuento ?? 0}</td>
-                <td>${p.metodoPago}</td>
-
-                <td>
-                    <strong>${p.estado}</strong><br>
-                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'PENDIENTE')">Pendiente</button>
-                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'PAGADO')">Pagado</button>
-                    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'ENTREGADO')">Entregado</button>
-                </td>
-
-                <td>
-                    <div class="detalle-box">${detalleTexto}</div>
-                </td>
-
-                <td>
-    <button class="btn-estado" onclick="cambiarEstado(${p.id}, 'ENTREGADO')">
-        Terminar pedido
-    </button>
-    <br><br>
-    <button class="btn-delete" onclick="borrarPedido(${p.id})">Eliminar</button>
-</td>
-
-
-            </tr>
-        `;
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.fecha?.replace("T"," ")}</td>
+            <td>$${p.total}</td>
+            <td>$${p.descuento ?? 0}</td>
+            <td>${p.metodoPago}</td>
+            <td>${p.estado}</td>
+            <td>${p.detalle}</td>
+            <td>
+                <button onclick="cambiarEstado(${p.id},'ENTREGADO')">Terminar</button>
+                <button onclick="borrarPedido(${p.id})" style="background:#b44444">Eliminar</button>
+            </td>
+        </tr>`;
     });
 }
 
-
-// =============================
-// CAMBIAR ESTADO
-// =============================
 async function cambiarEstado(id, estado) {
-    await fetch(`http://localhost:8085/api/admin/pedidos/${id}/estado?estado=${estado}`, {
+    await fetch(`${API_URL}/api/admin/pedidos/${id}/estado?estado=${estado}`, {
         method: "PUT"
     });
-
-    alert("Estado actualizado");
     cargarPedidos();
 }
 
-
-// =============================
-// BORRAR
-// =============================
 async function borrarPedido(id) {
-    if (!confirm("¿Seguro que querés borrar este pedido?")) return;
+    if (!confirm("¿Eliminar pedido?")) return;
 
-    await fetch(`http://localhost:8085/api/admin/pedidos/${id}`, {
+    await fetch(`${API_URL}/api/admin/pedidos/${id}`, {
         method: "DELETE"
     });
 
-    alert("Pedido borrado");
     cargarPedidos();
 }
-
 </script>
 
 </body>
