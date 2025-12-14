@@ -470,4 +470,15 @@ window.addToCart = addToCart;
 window.consultarEncargo = consultarEncargo;
 window.nextSlide = nextSlide;
 window.prevSlide = prevSlide;
+// === EXPORTAR FUNCIONES PARA HTML INLINE ===
+window.removeItem = removeItem;
+window.pagar = pagar;
+window.pagarEfectivo = pagarEfectivo;
+window.changeQty = changeQty;
+window.addToCart = addToCart;
+window.consultarEncargo = consultarEncargo;
+window.nextSlide = nextSlide;
+window.prevSlide = prevSlide;
+window.filtrar = filtrar;
+
 
