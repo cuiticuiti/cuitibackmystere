@@ -42,18 +42,17 @@
 
     <a href="index.html">Volver a la tienda</a>
 </div>
+<a id="wpBtn" href="#" target="_blank">Enviar pedido por WhatsApp</a>
+
 <script>
 const pedido = localStorage.getItem("lastOrder");
-
 if (pedido) {
-    localStorage.removeItem("lastOrder"); // 🔹 evita duplicados
-    window.open(
-        "https://wa.me/2615161952?text=" +
-        encodeURIComponent("Pago confirmado:\n\n" + pedido),
-        "_blank"
-    );
+  document.getElementById("wpBtn").href =
+    "https://wa.me/2615161952?text=" +
+    encodeURIComponent("Pago confirmado:\n\n" + pedido);
 }
 </script>
+
 
 
 </body>
