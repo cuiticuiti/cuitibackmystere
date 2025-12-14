@@ -34,17 +34,20 @@ let discount = 0;
 // CARGAR PRODUCTOS
 // =========================
 async function cargarProductos() {
+    if (container) container.innerHTML = "<p style='padding:10px'>Cargando catálogo...</p>";
+
     try {
-        const res = await fetch(`${API_URL}/api/productos`);
+        const res = await fetch(`${API_URL}/api/productos`, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
 
         products = await res.json();
         renderProducts();
     } catch (e) {
         console.error("ERROR cargando productos:", e);
+        if (container) container.innerHTML = "<p style='padding:10px'>No se pudo cargar el catálogo. Reintentá.</p>";
     }
 }
 
-cargarProductos();
 
 // =========================
 // FILTRO POR CATEGORÍAS
@@ -271,7 +274,8 @@ payCashBtn.onclick = pagarEfectivo;
 function pagarEfectivo() {
     if (cart.length === 0) return alert("Tu carrito está vacío.");
 
-const envio = document.querySelector('input[name="envio"]:checked')?.value || "retiro";
+const envio = document.getElementById("shippingMethod")?.value || "retiro";
+
 
     const items = agruparItems();
     const subtotal = calcularSubtotal();
@@ -297,11 +301,20 @@ async function pagar() {
 
     const items = agruparItems();
 
-    const resumen = items
-        .map(i => `• ${i.title} x${i.quantity} ($${i.total})`)
-        .join("\n");
+    const envio = document.getElementById("shippingMethod")?.value || "retiro";
+const subtotal = calcularSubtotal();
+const totalFinal = Math.round(subtotal * (1 - discount));
 
-    localStorage.setItem("lastOrder", resumen);
+const resumen = items
+  .map(i => `• ${i.title} x${i.quantity} → $${i.total}`)
+  .join("\n");
+
+localStorage.setItem(
+  "lastOrder",
+  `${resumen}\n\nSubtotal: $${subtotal}\nDescuento: ${Math.round(discount*100)}%\nTOTAL: $${totalFinal}\nEntrega: ${envio}`
+);
+
+
 
     const body = {
         items: items.map(i => ({
@@ -317,8 +330,16 @@ async function pagar() {
         body: JSON.stringify(body)
     });
 
-    const data = await res.json();
-    window.location.href = data.init_point;
+   const data = await res.json();
+
+const url = data.init_point || data.initPoint;
+if (!url) {
+    console.error("Respuesta MP:", data);
+    alert("Error generando pago. Probá de nuevo.");
+    return;
+}
+window.location.href = url;
+
 }
 
 
