@@ -46,9 +46,15 @@
 const pedido = localStorage.getItem("lastOrder");
 
 if (pedido) {
-    window.open(`https://wa.me/2615161952?text=¡Pago confirmado!%0A%0A${pedido}`);
+    localStorage.removeItem("lastOrder"); // 🔹 evita duplicados
+    window.open(
+        "https://wa.me/2615161952?text=" +
+        encodeURIComponent("Pago confirmado:\n\n" + pedido),
+        "_blank"
+    );
 }
 </script>
+
 
 </body>
 </html>
