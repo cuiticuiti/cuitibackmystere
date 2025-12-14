@@ -119,116 +119,71 @@
 
 
 <script>
-    const API_URL = "https://cuitibackmystere.onrender.com";
+const API_URL = "https://cuitibackmystere.onrender.com";
 
-// ================================
-// VALIDAR LOGIN
-// ================================
-
+// seguridad
 if (!localStorage.getItem("admin")) {
     window.location.href = "admin-login.html";
 }
 
-
-// ================================
-// CARGAR PRODUCTOS
-// ================================
-
-
-
+// cargar productos
 async function cargarProductos() {
-    try {
-        const res = await fetch(`${API_URL}/api/admin/productos`);
-        const datos = await res.json();
-        renderTabla(datos);
-    } catch (e) {
-        console.error("Error cargando productos:", e);
-        alert("No se pudieron cargar los productos");
-    }
+    const res = await fetch(`${API_URL}/api/admin/productos`);
+    const datos = await res.json();
+    renderTabla(datos);
 }
-
 cargarProductos();
-
-
-
-// ================================
-// RENDERIZAR TABLA
-// ================================
 
 function renderTabla(items) {
     const tbody = document.querySelector("#tabla tbody");
     tbody.innerHTML = "";
 
     items.forEach(p => {
-
         tbody.innerHTML += `
         <tr>
-
             <td>${p.id}</td>
-
             <td><input id="nombre-${p.id}" value="${p.nombre}"></td>
-
             <td>
                 <select id="genero-${p.id}">
-                    <option value="hombre" ${p.genero === "hombre" ? "selected" : ""}>Hombre</option>
-                    <option value="mujer" ${p.genero === "mujer" ? "selected" : ""}>Mujer</option>
-                    <option value="unisex" ${p.genero === "unisex" ? "selected" : ""}>Unisex</option>
+                    <option value="hombre" ${p.genero==="hombre"?"selected":""}>Hombre</option>
+                    <option value="mujer" ${p.genero==="mujer"?"selected":""}>Mujer</option>
+                    <option value="unisex" ${p.genero==="unisex"?"selected":""}>Unisex</option>
                 </select>
             </td>
-
             <td><input id="precio-${p.id}" type="number" value="${p.precio}"></td>
-
-            <td><input id="precioAntes-${p.id}" type="number" value="${p.precioAntes ?? ''}"></td>
-
+            <td><input id="precioAntes-${p.id}" type="number" value="${p.precioAntes ?? ""}"></td>
             <td><input id="stock-${p.id}" type="number" value="${p.stock}"></td>
-
-            <td><input id="imagen-${p.id}" value="${p.imagen}" style="width:200px"></td>
-
-            <td><input id="sale-${p.id}" type="checkbox" ${p.sale ? "checked" : ""}></td>
-
+            <td><input id="imagen-${p.id}" value="${p.imagen}"></td>
+            <td><input id="sale-${p.id}" type="checkbox" ${p.sale?"checked":""}></td>
             <td>
                 <button onclick="guardar(${p.id})">Guardar</button>
                 <button onclick="eliminar(${p.id})" style="background:#b44444">Eliminar</button>
             </td>
-
         </tr>`;
     });
 }
 
-
-// ================================
-// CREAR PRODUCTO
-// ================================
-
 async function crearProducto() {
     const nuevo = {
-        nombre: document.getElementById("nombre").value,
-        precio: +document.getElementById("precio").value,
-        precioAntes: +document.getElementById("precioAntes").value || null,
-        stock: +document.getElementById("stock").value,
-        imagen: document.getElementById("imagen").value,
-        genero: document.getElementById("genero").value,
-        sale: document.getElementById("sale").checked
+        nombre: nombre.value,
+        precio: +precio.value,
+        precioAntes: +precioAntes.value || null,
+        stock: +stock.value,
+        imagen: imagen.value,
+        genero: genero.value,
+        sale: sale.checked
     };
 
-   await fetch(`${API_URL}/api/admin/productos`, {
-
+    await fetch(`${API_URL}/api/admin/productos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevo)
     });
 
-    alert("Producto creado");
     cargarProductos();
 }
 
-
-// ================================
-// GUARDAR CAMBIOS
-// ================================
-
 async function guardar(id) {
-
     const producto = {
         nombre: document.getElementById(`nombre-${id}`).value,
         genero: document.getElementById(`genero-${id}`).value,
@@ -239,44 +194,29 @@ async function guardar(id) {
         sale: document.getElementById(`sale-${id}`).checked
     };
 
-   await fetch(`${API_URL}/api/admin/productos/${id}`, {
-
+    await fetch(`${API_URL}/api/admin/productos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(producto)
     });
 
-    alert("Producto actualizado");
-}
-
-
-// ================================
-// ELIMINAR
-// ================================
-
-async function eliminar(id) {
-    if (!confirm("¿Seguro que querés eliminar este producto?")) return;
-
-    await fetch(`${API_URL}/api/admin/productos/${id}`, {
-
-        method: "DELETE"
-    });
-
-    alert("Producto eliminado");
     cargarProductos();
 }
 
+async function eliminar(id) {
+    if (!confirm("¿Eliminar producto?")) return;
 
-// ================================
-// LOGOUT
-// ================================
+    await fetch(`${API_URL}/api/admin/productos/${id}`, {
+        method: "DELETE"
+    });
+
+    cargarProductos();
+}
 
 function logout() {
     localStorage.removeItem("admin");
     window.location.href = "admin-login.html";
 }
-
 </script>
-
 </body>
 </html>
