@@ -1,59 +1,33 @@
-package com.mystere.mercadopago.service;
+public PreferenceResponse createPreference(PaymentRequest request) {
 
-import com.mystere.mercadopago.controller.PaymentRequest;
-import com.mystere.mercadopago.controller.PreferenceResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+    String url = "https://api.mercadopago.com/checkout/preferences?access_token=" + accessToken;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+    List<Map<String, Object>> mpItems = request.items().stream()
+            .map(item -> {
+                Map<String, Object> m = new HashMap<>();
+                m.put("title", item.title());
+                m.put("quantity", item.quantity());
+                m.put("currency_id", "ARS");
+                m.put("unit_price", item.price());
+                return m;
+            })
+            .toList();
 
-@Service
-public class PaymentService {
+    Map<String, Object> body = new HashMap<>();
+    body.put("items", mpItems);
 
-    @Value("${MERCADOPAGO_ACCESS_TOKEN}")
-    private String accessToken;
+    Map<String, Object> backUrls = new HashMap<>();
+    backUrls.put("success", "https://mysterefragancias.com/success.html");
+    backUrls.put("failure", "https://mysterefragancias.com/failure.html");
+    backUrls.put("pending", "https://mysterefragancias.com/pending.html");
 
-    private final RestTemplate rest = new RestTemplate();
+    body.put("back_urls", backUrls);
+    body.put("auto_return", "approved");
 
-    public PreferenceResponse createPreference(PaymentRequest request) {
+    Map response = rest.postForObject(url, body, Map.class);
 
-        String url = "https://api.mercadopago.com/checkout/preferences?access_token=" + accessToken;
+    String id = (String) response.get("id");
+    String initPoint = response.get("init_point").toString();
 
-        // ---- ITEMS ----
-        List<Map<String, Object>> mpItems = request.items().stream()
-                .map(item -> {
-                    Map<String, Object> m = new HashMap<>();
-                    m.put("title", item.title());
-                    m.put("quantity", item.quantity());
-                    m.put("currency_id", "ARS");
-                    m.put("unit_price", item.price());
-                    return m;
-                })
-                .toList();
-
-        // ---- BODY COMPLETO ----
-        Map<String, Object> body = new HashMap<>();
-        body.put("items", mpItems);
-
-        // ---- ESTE ES EL BLOQUE CRÍTICO ----
-        Map<String, Object> backUrls = new HashMap<>();
-        backUrls.put("success", "https://google.com");
-        backUrls.put("failure", "https://google.com");
-        backUrls.put("pending", "https://google.com");
-
-        body.put("back_urls", backUrls);
-
-
-
-        // ---- CREAR PREFERENCIA ----
-        Map response = rest.postForObject(url, body, Map.class);
-
-        String id = (String) response.get("id");
-        String initPoint = response.get("init_point").toString();
-
-        return new PreferenceResponse(id, initPoint);
-    }
+    return new PreferenceResponse(id, initPoint);
 }
