@@ -79,7 +79,8 @@ function renderProducts(filtro = "todos") {
 
         container.innerHTML += `
         <div class="product-card">
-            <img src="${p.imagen}" alt="${p.nombre}">
+           <img src="https://mysterefragancias.com/${p.imagen}">
+
             <div class="product-info">
 
                 ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
