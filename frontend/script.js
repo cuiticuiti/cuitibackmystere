@@ -480,5 +480,11 @@ window.consultarEncargo = consultarEncargo;
 window.nextSlide = nextSlide;
 window.prevSlide = prevSlide;
 window.filtrar = filtrar;
+// =========================
+// INICIO
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+    cargarProductos();
+});
 
 
