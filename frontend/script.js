@@ -33,20 +33,54 @@ let discount = 0;
 // =========================
 // CARGAR PRODUCTOS
 // =========================
-async function cargarProductos() {
-    if (container) container.innerHTML = "<p style='padding:10px'>Cargando catálogo...</p>";
+async function cargarProductos(reintento = 0) {
+    if (container) {
+        container.innerHTML = "<p style='padding:10px'>Cargando catálogo...</p>";
+    }
 
     try {
-        const res = await fetch(`${API_URL}/api/productos`, { cache: "no-store" });
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10s
+
+        const res = await fetch(`${API_URL}/api/productos`, {
+            cache: "no-store",
+            signal: controller.signal
+        });
+
+        clearTimeout(timeout);
+
         if (!res.ok) throw new Error("HTTP " + res.status);
 
         products = await res.json();
+
+        if (!Array.isArray(products) || products.length === 0) {
+            throw new Error("Catálogo vacío");
+        }
+
         renderProducts();
+
     } catch (e) {
-        console.error("ERROR cargando productos:", e);
-        if (container) container.innerHTML = "<p style='padding:10px'>No se pudo cargar el catálogo. Reintentá.</p>";
+        console.warn("Error cargando productos:", e);
+
+        if (reintento < 2) {
+            // reintenta hasta 2 veces
+            setTimeout(() => cargarProductos(reintento + 1), 2000);
+        } else {
+            if (container) {
+                container.innerHTML = `
+                    <p style="padding:10px;color:#a00">
+                        No se pudo cargar el catálogo.<br>
+                        Tocá para reintentar.
+                    </p>
+                    <button onclick="cargarProductos()" style="margin:10px">
+                        Reintentar
+                    </button>
+                `;
+            }
+        }
     }
 }
+
 
 
 // =========================
