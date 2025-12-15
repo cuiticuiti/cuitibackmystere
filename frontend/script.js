@@ -33,50 +33,49 @@ let discount = 0;
 // =========================
 // CARGAR PRODUCTOS
 // =========================
-async function cargarProductos(reintento = 0) {
+async function cargarProductos() {
     if (container) {
         container.innerHTML = "<p style='padding:10px'>Cargando catálogo...</p>";
     }
 
+    // 1️⃣ Intentar desde cache local
+    const cache = localStorage.getItem("catalogo_cache");
+    if (cache) {
+        try {
+            products = JSON.parse(cache);
+            renderProducts();
+        } catch {}
+    }
+
+    // 2️⃣ Pedir al backend en segundo plano
     try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000); // 10s
-
         const res = await fetch(`${API_URL}/api/productos`, {
-            cache: "no-store",
-            signal: controller.signal
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
         });
-
-        clearTimeout(timeout);
 
         if (!res.ok) throw new Error("HTTP " + res.status);
 
-        products = await res.json();
+        const data = await res.json();
 
-        if (!Array.isArray(products) || products.length === 0) {
-            throw new Error("Catálogo vacío");
-        }
+        // 3️⃣ Guardar cache
+        localStorage.setItem("catalogo_cache", JSON.stringify(data));
 
+        products = data;
         renderProducts();
 
     } catch (e) {
-        console.warn("Error cargando productos:", e);
+        console.error("ERROR backend:", e);
 
-        if (reintento < 2) {
-            // reintenta hasta 2 veces
-            setTimeout(() => cargarProductos(reintento + 1), 2000);
-        } else {
-            if (container) {
-                container.innerHTML = `
-                    <p style="padding:10px;color:#a00">
-                        No se pudo cargar el catálogo.<br>
-                        Tocá para reintentar.
-                    </p>
-                    <button onclick="cargarProductos()" style="margin:10px">
-                        Reintentar
-                    </button>
-                `;
-            }
+        // 4️⃣ Si no hay cache y falla
+        if (!cache && container) {
+            container.innerHTML = `
+              <p style="padding:10px;color:#b44545">
+                No se pudo cargar el catálogo.<br>
+                Probá nuevamente en unos segundos.
+              </p>`;
         }
     }
 }
