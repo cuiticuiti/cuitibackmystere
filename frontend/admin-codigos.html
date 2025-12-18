@@ -102,7 +102,7 @@ if (!localStorage.getItem("admin")) {
 // CARGAR CÓDIGOS
 // ================================
 async function cargar() {
-    const res = await fetch(`${API_URL}/api/admin/descuentos`);
+    const res = await fetch(`${API_URL}/api/descuentos`);
     const lista = await res.json();
     render(lista);
 }
@@ -142,7 +142,7 @@ async function crear() {
         usosMaximos: +document.getElementById("maximos").value
     };
 
-    await fetch(`${API_URL}/api/admin/descuentos`, {
+    await fetch(`${API_URL}/api/descuentos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -163,7 +163,7 @@ async function guardar(id) {
         usosActuales: +document.getElementById(`act-${id}`).value
     };
 
-    await fetch(`${API_URL}/api/admin/descuentos/${id}`, {
+    await fetch(`${API_URL}/api/descuentos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
@@ -179,7 +179,7 @@ async function guardar(id) {
 async function borrar(id) {
     if (!confirm("¿Seguro que querés eliminarlo?")) return;
 
-    await fetch(`${API_URL}/api/admin/descuentos/${id}`, {
+    await fetch(`${API_URL}/api/descuentos/${id}`, {
         method: "DELETE"
     });
 
