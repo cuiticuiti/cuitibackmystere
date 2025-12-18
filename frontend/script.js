@@ -350,13 +350,17 @@ localStorage.setItem(
 
 
 
-    const body = {
-        items: items.map(i => ({
-            title: i.title,
-            quantity: i.quantity,
-            price: Math.round(i.price * (1 - discount))
-        }))
-    };
+  const body = {
+    items: items.map(i => ({
+        title: i.title,
+        quantity: i.quantity,
+        price: Math.round(i.price * (1 - discount))
+    })),
+    codigoDescuento: discount > 0
+        ? discountInput.value.trim().toUpperCase()
+        : null
+};
+
 
     const res = await fetch(`${API_URL}/api/pay/create`, {
         method: "POST",
