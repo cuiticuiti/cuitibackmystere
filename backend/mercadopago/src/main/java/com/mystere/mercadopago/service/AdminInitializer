@@ -13,16 +13,19 @@ public class AdminInitializer {
     CommandLineRunner initAdmin(AdminUserRepository repo) {
         return args -> {
 
-            if (repo.count() == 0) {
+            // 👇 usuario que vas a usar para loguearte
+            String username = "admin";
+            String password = "admin123";
+
+            if (repo.findByUsername(username) == null) {
                 AdminUser admin = new AdminUser();
-                admin.setUsername("admin");
-                admin.setPassword("admin123"); // después lo cambiamos si querés
+                admin.setUsername(username);
+                admin.setPassword(password); // texto plano (OK por ahora)
 
                 repo.save(admin);
-
-                System.out.println("✅ Admin creado: admin / admin123");
+                System.out.println("✅ Admin creado: " + username);
             } else {
-                System.out.println("ℹ️ Admin ya existente");
+                System.out.println("ℹ️ Admin ya existe");
             }
         };
     }
