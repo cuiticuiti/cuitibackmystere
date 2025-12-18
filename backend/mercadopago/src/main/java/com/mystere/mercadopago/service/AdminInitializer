@@ -3,27 +3,29 @@ package com.mystere.mercadopago.service;
 import com.mystere.mercadopago.model.AdminUser;
 import com.mystere.mercadopago.repository.AdminUserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class AdminInitializer {
+@Component
+public class AdminInitializer implements CommandLineRunner {
 
-    @Bean
-    CommandLineRunner initAdmin(AdminUserRepository adminRepo) {
-        return args -> {
+    private final AdminUserRepository adminRepo;
 
-            if (adminRepo.count() == 0) {
-                AdminUser admin = new AdminUser();
-                admin.setUsername("admin");
-                admin.setPassword("admin123"); // texto plano (ok por ahora)
+    public AdminInitializer(AdminUserRepository adminRepo) {
+        this.adminRepo = adminRepo;
+    }
 
-                adminRepo.save(admin);
+    @Override
+    public void run(String... args) {
+        if (adminRepo.count() == 0) {
+            AdminUser admin = new AdminUser();
+            admin.setUsername("admin");
+            admin.setPassword("admin123");
 
-                System.out.println("✔ Admin creado: admin / admin123");
-            } else {
-                System.out.println("✔ Admin ya existente");
-            }
-        };
+            adminRepo.save(admin);
+
+            System.out.println("✔ ADMIN CREADO → usuario: admin | password: admin123");
+        } else {
+            System.out.println("ℹ Admin ya existe, no se crea otro");
+        }
     }
 }
