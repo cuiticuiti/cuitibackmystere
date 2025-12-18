@@ -43,19 +43,18 @@ public class CodigoDescuentoController {
     // =========================
     // CONSUMIR USO (RESTA 1)
     // =========================
-    @PostMapping("/usar")
-    public void usar(@RequestBody Map<String, String> body) {
+   @PostMapping("/usar")
+public void usar(@RequestBody Map<String, String> body) {
 
-        String codigo = body.get("codigo");
+    String codigo = body.get("codigo").toUpperCase();
 
-        CodigoDescuento c = repo.findByCodigo(codigo)
-                .orElseThrow();
+    CodigoDescuento c = repo.findByCodigo(codigo).orElseThrow();
 
-        if (!c.disponible()) {
-            throw new RuntimeException("Cupón agotado");
-        }
-
-        c.setUsosActuales(c.getUsosActuales() + 1);
-        repo.save(c);
+    if (!c.disponible()) {
+        throw new RuntimeException("Cupón agotado");
     }
+
+    c.setUsosActuales(c.getUsosActuales() + 1);
+    repo.save(c);
+}
 }
