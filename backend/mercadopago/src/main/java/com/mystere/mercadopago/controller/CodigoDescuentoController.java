@@ -2,7 +2,6 @@ package com.mystere.mercadopago.controller;
 
 import com.mystere.mercadopago.model.CodigoDescuento;
 import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
-import com.mystere.mercadopago.service.CodigoDescuentoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,13 +18,17 @@ public class CodigoDescuentoController {
         this.repo = repo;
     }
 
-    // LISTAR
+    // =========================
+    // LISTAR (ADMIN)
+    // =========================
     @GetMapping
     public List<CodigoDescuento> listar() {
         return repo.findAll();
     }
 
-    // CREAR
+    // =========================
+    // CREAR (ADMIN)
+    // =========================
     @PostMapping
     public CodigoDescuento crear(@RequestBody CodigoDescuento c) {
         c.setCodigo(c.getCodigo().toUpperCase());
@@ -33,7 +36,9 @@ public class CodigoDescuentoController {
         return repo.save(c);
     }
 
-    // EDITAR
+    // =========================
+    // EDITAR (ADMIN)
+    // =========================
     @PutMapping("/{id}")
     public CodigoDescuento editar(@PathVariable Long id,
                                   @RequestBody CodigoDescuento data) {
@@ -48,13 +53,17 @@ public class CodigoDescuentoController {
         return repo.save(c);
     }
 
-    // BORRAR
+    // =========================
+    // BORRAR (ADMIN)
+    // =========================
     @DeleteMapping("/{id}")
     public void borrar(@PathVariable Long id) {
         repo.deleteById(id);
     }
 
-    // VALIDAR (cliente)
+    // =========================
+    // VALIDAR CUPÓN (CLIENTE)
+    // =========================
     @PostMapping("/validar")
     public Map<String, Object> validar(@RequestBody Map<String, String> body) {
 
@@ -72,7 +81,9 @@ public class CodigoDescuentoController {
         );
     }
 
-    // USAR (compra)
+    // =========================
+    // USAR CUPÓN (CUANDO SE PAGA)
+    // =========================
     @PostMapping("/usar")
     public void usar(@RequestBody Map<String, String> body) {
 
@@ -87,10 +98,4 @@ public class CodigoDescuentoController {
         c.setUsosActuales(c.getUsosActuales() + 1);
         repo.save(c);
     }
-}
-
-
-    c.setUsosActuales(c.getUsosActuales() + 1);
-    repo.save(c);
-}
 }
