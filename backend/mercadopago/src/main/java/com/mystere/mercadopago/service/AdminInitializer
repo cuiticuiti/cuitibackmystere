@@ -2,34 +2,28 @@ package com.mystere.mercadopago.service;
 
 import com.mystere.mercadopago.model.AdminUser;
 import com.mystere.mercadopago.repository.AdminUserRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class AdminInitializer {
 
-    private final AdminUserRepository adminRepo;
+    @Bean
+    CommandLineRunner initAdmin(AdminUserRepository adminRepo) {
+        return args -> {
 
-    public AdminInitializer(AdminUserRepository adminRepo) {
-        this.adminRepo = adminRepo;
-    }
+            if (adminRepo.count() == 0) {
+                AdminUser admin = new AdminUser();
+                admin.setUsername("admin");
+                admin.setPassword("admin123"); // texto plano (ok por ahora)
 
-    @PostConstruct
-    public void initAdmin() {
+                adminRepo.save(admin);
 
-        // 🔎 Buscamos si ya existe
-        AdminUser existing = adminRepo.findByUsername("admin");
-
-        if (existing == null) {
-            AdminUser admin = new AdminUser();
-            admin.setUsername("admin");
-            admin.setPassword("admin123"); // 🔐 credencial fija
-
-            adminRepo.save(admin);
-
-            System.out.println("✔ Admin creado: admin / admin123");
-        } else {
-            System.out.println("ℹ Admin ya existe");
-        }
+                System.out.println("✔ Admin creado: admin / admin123");
+            } else {
+                System.out.println("✔ Admin ya existente");
+            }
+        };
     }
 }
