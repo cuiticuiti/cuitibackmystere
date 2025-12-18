@@ -5,6 +5,9 @@ import com.mystere.mercadopago.controller.PreferenceResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.mystere.mercadopago.model.CodigoDescuento;
+import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,13 @@ public class PaymentService {
     private String accessToken;
 
     private final RestTemplate rest = new RestTemplate();
+
+    private final CodigoDescuentoRepository codigoRepo;
+
+    public PaymentService(CodigoDescuentoRepository codigoRepo) {
+        this.codigoRepo = codigoRepo;
+    }
+
 
     public PreferenceResponse createPreference(PaymentRequest request) {
 
@@ -46,10 +56,26 @@ public class PaymentService {
 
     Map response = rest.postForObject(url, body, Map.class);
 
-    String id = (String) response.get("id");
-    String initPoint = response.get("init_point").toString();
+String id = (String) response.get("id");
+String initPoint = response.get("init_point").toString();
 
-    return new PreferenceResponse(id, initPoint);
+// ===============================
+// DESCONTAR CUPÓN AUTOMÁTICAMENTE
+// ===============================
+if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+
+    CodigoDescuento c = codigoRepo
+            .findByCodigo(request.codigoDescuento().toUpperCase())
+            .orElse(null);
+
+    if (c != null && c.disponible()) {
+        c.setUsosActuales(c.getUsosActuales() + 1);
+        codigoRepo.save(c);
+    }
+}
+
+return new PreferenceResponse(id, initPoint);
+
 }
 
 }
