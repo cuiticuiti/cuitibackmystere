@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x gradlew
-RUN ./gradlew bootJar -x test
+RUN ./gradlew clean bootJar -x test
 
 # mover el jar generado a app.jar
 RUN mv build/libs/*.jar app.jar
