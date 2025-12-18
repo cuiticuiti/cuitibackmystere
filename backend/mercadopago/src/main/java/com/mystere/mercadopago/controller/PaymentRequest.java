@@ -4,6 +4,5 @@ import java.util.List;
 
 public record PaymentRequest(
         List<ItemRequest> items,
-        Double discountAmount
+        String codigoDescuento
 ) {}
-
