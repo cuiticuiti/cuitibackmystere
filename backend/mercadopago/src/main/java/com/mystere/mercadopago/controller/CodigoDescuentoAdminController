@@ -1,3 +1,11 @@
+package com.mystere.mercadopago.controller;
+
+import com.mystere.mercadopago.model.CodigoDescuento;
+import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin/descuentos")
 @CrossOrigin("*")
@@ -18,20 +26,19 @@ public class CodigoDescuentoAdminController {
     // CREAR
     @PostMapping
     public CodigoDescuento crear(@RequestBody CodigoDescuento c) {
+        c.setCodigo(c.getCodigo().toUpperCase());
         c.setUsosActuales(0);
         return repo.save(c);
     }
 
     // EDITAR
     @PutMapping("/{id}")
-    public CodigoDescuento editar(
-            @PathVariable Long id,
-            @RequestBody CodigoDescuento data) {
+    public CodigoDescuento editar(@PathVariable Long id,
+                                  @RequestBody CodigoDescuento data) {
 
-        CodigoDescuento c = repo.findById(id)
-                .orElseThrow();
+        CodigoDescuento c = repo.findById(id).orElseThrow();
 
-        c.setCodigo(data.getCodigo());
+        c.setCodigo(data.getCodigo().toUpperCase());
         c.setPorcentaje(data.getPorcentaje());
         c.setUsosMaximos(data.getUsosMaximos());
         c.setUsosActuales(data.getUsosActuales());
