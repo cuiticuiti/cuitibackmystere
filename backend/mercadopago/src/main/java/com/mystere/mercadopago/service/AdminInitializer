@@ -1,0 +1,29 @@
+package com.mystere.mercadopago.service;
+
+import com.mystere.mercadopago.model.AdminUser;
+import com.mystere.mercadopago.repository.AdminUserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AdminInitializer {
+
+    @Bean
+    CommandLineRunner initAdmin(AdminUserRepository repo) {
+        return args -> {
+
+            if (repo.count() == 0) {
+                AdminUser admin = new AdminUser();
+                admin.setUsername("admin");
+                admin.setPassword("admin123"); // después lo cambiamos si querés
+
+                repo.save(admin);
+
+                System.out.println("✅ Admin creado: admin / admin123");
+            } else {
+                System.out.println("ℹ️ Admin ya existente");
+            }
+        };
+    }
+}
