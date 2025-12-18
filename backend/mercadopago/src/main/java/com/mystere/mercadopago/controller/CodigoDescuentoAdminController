@@ -1,0 +1,47 @@
+@RestController
+@RequestMapping("/api/admin/descuentos")
+@CrossOrigin("*")
+public class CodigoDescuentoAdminController {
+
+    private final CodigoDescuentoRepository repo;
+
+    public CodigoDescuentoAdminController(CodigoDescuentoRepository repo) {
+        this.repo = repo;
+    }
+
+    // LISTAR
+    @GetMapping
+    public List<CodigoDescuento> listar() {
+        return repo.findAll();
+    }
+
+    // CREAR
+    @PostMapping
+    public CodigoDescuento crear(@RequestBody CodigoDescuento c) {
+        c.setUsosActuales(0);
+        return repo.save(c);
+    }
+
+    // EDITAR
+    @PutMapping("/{id}")
+    public CodigoDescuento editar(
+            @PathVariable Long id,
+            @RequestBody CodigoDescuento data) {
+
+        CodigoDescuento c = repo.findById(id)
+                .orElseThrow();
+
+        c.setCodigo(data.getCodigo());
+        c.setPorcentaje(data.getPorcentaje());
+        c.setUsosMaximos(data.getUsosMaximos());
+        c.setUsosActuales(data.getUsosActuales());
+
+        return repo.save(c);
+    }
+
+    // BORRAR
+    @DeleteMapping("/{id}")
+    public void borrar(@PathVariable Long id) {
+        repo.deleteById(id);
+    }
+}
