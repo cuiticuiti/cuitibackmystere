@@ -19,11 +19,9 @@ public class CodigoDescuentoController {
         this.repo = repo;
     }
 
-    @GetMapping
-    public List<CodigoDescuento> listar() {
-        return repo.findAll();
-    }
-
+    // =========================
+    // VALIDAR CUPÓN (NO RESTA)
+    // =========================
     @PostMapping("/validar")
     public Map<String, Object> validar(@RequestBody Map<String, String> body) {
 
@@ -36,13 +34,28 @@ public class CodigoDescuentoController {
             return Map.of("valido", false);
         }
 
-        // consumir un uso
-        c.setUsosActuales(c.getUsosActuales() + 1);
-        repo.save(c);
-
         return Map.of(
                 "valido", true,
                 "porcentaje", c.getPorcentaje()
         );
+    }
+
+    // =========================
+    // CONSUMIR USO (RESTA 1)
+    // =========================
+    @PostMapping("/usar")
+    public void usar(@RequestBody Map<String, String> body) {
+
+        String codigo = body.get("codigo");
+
+        CodigoDescuento c = repo.findByCodigo(codigo)
+                .orElseThrow();
+
+        if (!c.disponible()) {
+            throw new RuntimeException("Cupón agotado");
+        }
+
+        c.setUsosActuales(c.getUsosActuales() + 1);
+        repo.save(c);
     }
 }
