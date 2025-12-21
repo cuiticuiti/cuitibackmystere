@@ -362,7 +362,8 @@ localStorage.setItem(
     items: items.map(i => ({
         title: i.title,
         quantity: i.quantity,
-        price: Math.round(i.price * (1 - discount))
+        price: Math.max(1, Math.round(i.price * (1 - discount)))
+
     })),
     codigoDescuento: discount > 0
         ? discountInput.value.trim().toUpperCase()
