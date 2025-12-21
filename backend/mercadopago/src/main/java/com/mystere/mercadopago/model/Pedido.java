@@ -15,6 +15,8 @@ public class Pedido {
 
     private Integer descuento;   // en pesos
 
+    private String codigoDescuento; // 👈 NUEVO (EL CUPÓN USADO)
+
     private String estado;       // PAGADO / PENDIENTE / FALLIDO
 
     private String metodoPago;   // MERCADO_PAGO / EFECTIVO
@@ -22,7 +24,8 @@ public class Pedido {
     private LocalDateTime fecha;
 
     @Lob
-    private String detalle;      // JSON con los perfumes del pedido
+    private String detalle;
+
 
     // ====== GETTERS & SETTERS ======
 
@@ -81,4 +84,12 @@ public class Pedido {
     public void setDetalle(String detalle) {
         this.detalle = detalle;
     }
+    public String getCodigoDescuento() {
+    return codigoDescuento;
+}
+
+public void setCodigoDescuento(String codigoDescuento) {
+    this.codigoDescuento = codigoDescuento;
+}
+
 }
