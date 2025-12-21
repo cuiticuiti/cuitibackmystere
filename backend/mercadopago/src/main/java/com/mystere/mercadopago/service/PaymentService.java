@@ -89,19 +89,7 @@ public class PaymentService {
 
         pedidoRepo.save(pedido);
 
-        // ===============================
-        // CONSUMIR CUPÓN (UNA VEZ)
-        // ===============================
-        if (pedido.getCodigoDescuento() != null) {
-            CodigoDescuento c = codigoRepo
-                    .findByCodigo(pedido.getCodigoDescuento())
-                    .orElse(null);
-
-            if (c != null && c.disponible()) {
-                c.setUsosActuales(c.getUsosActuales() + 1);
-                codigoRepo.save(c);
-            }
-        }
+    
 
         return new PreferenceResponse(id, initPoint);
     }
