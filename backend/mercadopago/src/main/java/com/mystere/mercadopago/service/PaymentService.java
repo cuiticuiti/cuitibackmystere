@@ -59,20 +59,7 @@ public class PaymentService {
 String id = (String) response.get("id");
 String initPoint = response.get("init_point").toString();
 
-// ===============================
-// DESCONTAR CUPÓN AUTOMÁTICAMENTE
-// ===============================
-if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
 
-    CodigoDescuento c = codigoRepo
-            .findByCodigo(request.codigoDescuento().toUpperCase())
-            .orElse(null);
-
-    if (c != null && c.disponible()) {
-        c.setUsosActuales(c.getUsosActuales() + 1);
-        codigoRepo.save(c);
-    }
-}
 
 return new PreferenceResponse(id, initPoint);
 
