@@ -222,7 +222,7 @@ function addToCart(i) {
 
     if (p.stock < qty) return alert("No hay suficiente stock.");
 
-    p.stock -= qty;
+   
 
     for (let n = 0; n < qty; n++) cart.push(p);
 
