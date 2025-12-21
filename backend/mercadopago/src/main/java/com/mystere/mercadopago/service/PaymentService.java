@@ -2,13 +2,15 @@ package com.mystere.mercadopago.service;
 
 import com.mystere.mercadopago.controller.PaymentRequest;
 import com.mystere.mercadopago.controller.PreferenceResponse;
+import com.mystere.mercadopago.model.CodigoDescuento;
+import com.mystere.mercadopago.model.Pedido;
+import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
+import com.mystere.mercadopago.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.mystere.mercadopago.model.CodigoDescuento;
-import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
 
-
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,47 +24,85 @@ public class PaymentService {
     private final RestTemplate rest = new RestTemplate();
 
     private final CodigoDescuentoRepository codigoRepo;
+    private final PedidoRepository pedidoRepo;
 
-    public PaymentService(CodigoDescuentoRepository codigoRepo) {
+    public PaymentService(
+            CodigoDescuentoRepository codigoRepo,
+            PedidoRepository pedidoRepo
+    ) {
         this.codigoRepo = codigoRepo;
+        this.pedidoRepo = pedidoRepo;
     }
-
 
     public PreferenceResponse createPreference(PaymentRequest request) {
 
-    String url = "https://api.mercadopago.com/checkout/preferences?access_token=" + accessToken;
+        // ===============================
+        // MERCADO PAGO
+        // ===============================
+        String url = "https://api.mercadopago.com/checkout/preferences?access_token=" + accessToken;
 
-    List<Map<String, Object>> mpItems = request.items().stream()
-            .map(item -> {
-                Map<String, Object> m = new HashMap<>();
-                m.put("title", item.title());
-                m.put("quantity", item.quantity());
-                m.put("currency_id", "ARS");
-                m.put("unit_price", item.price());
-                return m;
-            })
-            .toList();
+        List<Map<String, Object>> mpItems = request.items().stream()
+                .map(item -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("title", item.title());
+                    m.put("quantity", item.quantity());
+                    m.put("currency_id", "ARS");
+                    m.put("unit_price", item.price());
+                    return m;
+                })
+                .toList();
 
-    Map<String, Object> body = new HashMap<>();
-    body.put("items", mpItems);
+        Map<String, Object> body = new HashMap<>();
+        body.put("items", mpItems);
 
-    Map<String, Object> backUrls = new HashMap<>();
-    backUrls.put("success", "https://mysterefragancias.com/success.html");
-    backUrls.put("failure", "https://mysterefragancias.com/failure.html");
-    backUrls.put("pending", "https://mysterefragancias.com/pending.html");
+        Map<String, Object> backUrls = new HashMap<>();
+        backUrls.put("success", "https://mysterefragancias.com/success.html");
+        backUrls.put("failure", "https://mysterefragancias.com/failure.html");
+        backUrls.put("pending", "https://mysterefragancias.com/pending.html");
 
-    body.put("back_urls", backUrls);
-    body.put("auto_return", "approved");
+        body.put("back_urls", backUrls);
+        body.put("auto_return", "approved");
 
-    Map response = rest.postForObject(url, body, Map.class);
+        Map response = rest.postForObject(url, body, Map.class);
 
-String id = (String) response.get("id");
-String initPoint = response.get("init_point").toString();
+        String id = (String) response.get("id");
+        String initPoint = response.get("init_point").toString();
 
+        // ===============================
+        // GUARDAR PEDIDO
+        // ===============================
+        Pedido pedido = new Pedido();
+        pedido.setFecha(LocalDateTime.now());
+        pedido.setMetodoPago("MERCADO_PAGO");
+        pedido.setEstado("PENDIENTE");
 
+        int total = request.items().stream()
+                .mapToInt(i -> i.price() * i.quantity())
+                .sum();
 
-return new PreferenceResponse(id, initPoint);
+        pedido.setTotal(total);
+        pedido.setDetalle(request.items().toString());
 
-}
+        if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+            pedido.setCodigoDescuento(request.codigoDescuento().toUpperCase());
+        }
 
+        pedidoRepo.save(pedido);
+
+        // ===============================
+        // CONSUMIR CUPÓN (UNA VEZ)
+        // ===============================
+        if (pedido.getCodigoDescuento() != null) {
+            CodigoDescuento c = codigoRepo
+                    .findByCodigo(pedido.getCodigoDescuento())
+                    .orElse(null);
+
+            if (c != null && c.disponible()) {
+                c.setUsosActuales(c.getUsosActuales() + 1);
+                codigoRepo.save(c);
+            }
+        }
+
+        return new PreferenceResponse(id, initPoint);
+    }
 }
