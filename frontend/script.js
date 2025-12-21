@@ -175,25 +175,33 @@ function consultarEncargo(i) {
 // =========================
 // DESCUENTOS
 // =========================
-const discountCodes = {
-    "MYSTERE10A": 0.10,
-    "MYSTERE10B": 0.10,
-    "MYSTERE20A": 0.20,
-    "MYSTERE20B": 0.20,
-    "NAVIDADMYSTERE": 0.20,
-    "MYSTERE30A": 0.30,
-    "MYSTERE30B": 0.30,
-    "MYSTERE40A": 0.40,
-    "MYSTERE40B": 0.40
-};
 
-discountBtn.addEventListener("click", () => {
+
+discountBtn.addEventListener("click", async () => {
     const code = discountInput.value.trim().toUpperCase();
-    discount = discountCodes[code] || 0;
+    if (!code) return alert("Ingresá un código");
 
-    alert(discount ? `Código aplicado: ${discount * 100}% OFF` : "Código inválido");
+    const res = await fetch(`${API_URL}/api/descuentos/validar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo: code })
+    });
+
+    const data = await res.json();
+
+    if (!data.valido) {
+        discount = 0;
+        appliedCode = null;
+        alert("Código inválido o agotado");
+    } else {
+        discount = data.porcentaje / 100;
+        appliedCode = code;
+        alert(`Código aplicado: ${data.porcentaje}% OFF`);
+    }
+
     renderCart();
 });
+;
 
 // =========================
 // CAMBIAR CANTIDAD
@@ -360,6 +368,14 @@ localStorage.setItem(
         ? discountInput.value.trim().toUpperCase()
         : null
 };
+    if (appliedCode) {
+    await fetch(`${API_URL}/api/descuentos/usar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo: appliedCode })
+    });
+}
+
 
 
     const res = await fetch(`${API_URL}/api/pay/create`, {
