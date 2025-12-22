@@ -15,8 +15,9 @@ const openCartBtn    = document.getElementById("openCart");
 const closeCartBtn   = document.getElementById("closeCart");
 const cartItems      = document.getElementById("cartItems");
 const cartTotal      = document.getElementById("cartTotal");
-const payCashBtn     = document.getElementById("payCash");
-const payMpBtn       = document.getElementById("payMP");
+const payCashBtn = document.getElementById("payCash");
+const payMpBtn   = document.getElementById("payMP");
+
 const discountInput  = document.getElementById("discountCode");
 const discountBtn    = document.getElementById("applyDiscount");
 const cartCountSpan  = document.getElementById("cartCount");
@@ -338,7 +339,21 @@ const envio = document.getElementById("shippingMethod")?.value || "retiro";
 // =========================
 
 
-payMpBtn.onclick = pagar;
+let pagando = false;
+
+payMpBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    if (pagando) return;
+    pagando = true;
+
+    try {
+        await pagar();
+    } finally {
+        pagando = false;
+    }
+});
+
 
 async function pagar() {
     if (cart.length === 0) {
@@ -346,22 +361,19 @@ async function pagar() {
         return;
     }
 
-    // 🔒 Bloquear botón para evitar doble click
     payMpBtn.disabled = true;
-    payMpBtn.textContent = "Generando pago...";
+    payMpBtn.textContent = "Redirigiendo...";
+
+    let data;
 
     try {
         const items = agruparItems();
-
-        const envio = document.getElementById("shippingMethod")?.value || "retiro";
-        const subtotal = calcularSubtotal();
-        const totalFinal = Math.round(subtotal * (1 - discount));
 
         const body = {
             items: items.map(i => ({
                 title: i.title,
                 quantity: i.quantity,
-                price: Math.round(i.price * (1 - discount))
+                price: i.price
             })),
             codigoDescuento: discount > 0
                 ? discountInput.value.trim().toUpperCase()
@@ -374,30 +386,34 @@ async function pagar() {
             body: JSON.stringify(body)
         });
 
-        if (!res.ok) {
-            throw new Error("Error HTTP " + res.status);
-        }
+        if (!res.ok) throw new Error("HTTP error");
 
-        const data = await res.json();
-
-        const url = data.init_point || data.initPoint;
-        if (!url) {
-            console.error("Respuesta MP inválida:", data);
-            throw new Error("No se recibió init_point");
-        }
-
-        // 🚀 Redirección REAL
-        window.location.href = url;
+        data = await res.json();
 
     } catch (e) {
-        console.error("ERROR PAGO:", e);
-        alert("No se pudo generar el pago. Probá de nuevo.");
-
-        // 🔓 Rehabilitar botón si falla
+        alert("Error generando el pago.");
         payMpBtn.disabled = false;
         payMpBtn.textContent = "Pagar con Mercado Pago";
+        return;
     }
+
+    if (!data || !data.initPoint) {
+        alert("No se pudo iniciar Mercado Pago.");
+        payMpBtn.disabled = false;
+        payMpBtn.textContent = "Pagar con Mercado Pago";
+        return;
+    }
+
+    // 🔥 ESTA LÍNEA ES CLAVE EN MOBILE
+    window.location.assign(data.initPoint);
 }
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        payMpBtn.disabled = false;
+        payMpBtn.textContent = "Pagar con Mercado Pago";
+        pagando = false;
+    }
+});
 
 
 // =========================
