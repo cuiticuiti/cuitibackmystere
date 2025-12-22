@@ -76,8 +76,9 @@ body {
 
 .slider-container {
     position: relative;
-    z-index: 1000; /* agregar */
+    z-index: 1;
 }
+
 
 footer {
     z-index: 10;
@@ -759,6 +760,10 @@ footer {
   }
 }
 
+#productsContainer {
+    position: relative;
+    z-index: 10;
+}
 
 
 
