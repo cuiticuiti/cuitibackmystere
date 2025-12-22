@@ -374,16 +374,18 @@ async function pagar() {
     try {
         const items = agruparItems();
 
-        const body = {
-            items: items.map(i => ({
-                title: i.title,
-                quantity: i.quantity,
-                price: i.price
-            })),
-            codigoDescuento: discount > 0
-                ? discountInput.value.trim().toUpperCase()
-                : null
-        };
+       const body = {
+    items: items.map(i => ({
+        title: i.title,
+        quantity: i.quantity,
+        price: i.price
+    }))
+};
+
+if (discount > 0) {
+    body.codigoDescuento = discountInput.value.trim().toUpperCase();
+}
+
 
         const res = await fetch(`${API_URL}/api/pay/create`, {
             method: "POST",
