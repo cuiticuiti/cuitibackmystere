@@ -16,11 +16,15 @@
 <div class="box">
     <h1>⏳ Pago pendiente</h1>
     <p>Tu pago está siendo procesado.</p>
-    <p>En breve recibirás una actualización.</p>
+    <p>Te avisaremos cuando se confirme.</p>
 
-    <a href="index.html">Volver al inicio</a>
+    <a href="index.html">Volver a la tienda</a>
 </div>
+
 <script>
+  // 🔥 limpiar estado
+  localStorage.removeItem("forceCart");
+
   setTimeout(() => {
     window.location.href = "index.html";
   }, 8000);
