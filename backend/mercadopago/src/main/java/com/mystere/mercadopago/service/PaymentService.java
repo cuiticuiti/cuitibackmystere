@@ -33,79 +33,80 @@ public class PaymentService {
         this.pedidoRepo = pedidoRepo;
     }
 
-    public PreferenceResponse createPreference(PaymentRequest request) {
+   public PreferenceResponse createPreference(PaymentRequest request) {
 
-        // ===============================
-        // VALIDACIONES
-        // ===============================
-        if (request == null || request.items() == null || request.items().isEmpty()) {
-            throw new RuntimeException("El pedido no tiene items");
-        }
-
-        // 🔥 NUNCA null
-        String codigo = request.codigoDescuento();
-        if (codigo == null) {
-            codigo = "";
-        }
-
-        // ===============================
-        // MERCADO PAGO
-        // ===============================
-        String url = "https://api.mercadopago.com/checkout/preferences?access_token=" + accessToken;
-
-        List<Map<String, Object>> mpItems = request.items().stream()
-                .map(item -> {
-                    Map<String, Object> m = new HashMap<>();
-                    m.put("title", item.title());
-                    m.put("quantity", item.quantity());
-                    m.put("currency_id", "ARS");
-                    m.put("unit_price", item.price());
-                    return m;
-                })
-                .toList();
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("items", mpItems);
-
-        Map<String, Object> backUrls = new HashMap<>();
-        backUrls.put("success", "https://mysterefragancias.com/success.html");
-        backUrls.put("failure", "https://mysterefragancias.com/failure.html");
-        backUrls.put("pending", "https://mysterefragancias.com/pending.html");
-
-        body.put("back_urls", backUrls);
-        body.put("auto_return", "approved");
-
-        Map response;
-        try {
-            response = rest.postForObject(url, body, Map.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Error Mercado Pago", e);
-        }
-
-        String id = response.get("id").toString();
-        String initPoint = response.get("init_point").toString();
-
-        // ===============================
-        // GUARDAR PEDIDO
-        // ===============================
-        Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDateTime.now());
-        pedido.setMetodoPago("MERCADO_PAGO");
-        pedido.setEstado("PENDIENTE");
-
-        int total = request.items().stream()
-                .mapToInt(i -> i.price() * i.quantity())
-                .sum();
-
-        pedido.setTotal(total);
-        pedido.setDetalle(request.items().toString());
-
-        if (!codigo.isBlank()) {
-            pedido.setCodigoDescuento(codigo.toUpperCase());
-        }
-
-        pedidoRepo.save(pedido);
-
-        return new PreferenceResponse(id, initPoint);
+    if (request == null || request.items() == null || request.items().isEmpty()) {
+        throw new RuntimeException("Pedido sin items");
     }
+
+    String url = "https://api.mercadopago.com/checkout/preferences";
+
+    List<Map<String, Object>> mpItems = request.items().stream()
+            .map(item -> {
+                Map<String, Object> m = new HashMap<>();
+                m.put("title", item.title());
+                m.put("quantity", item.quantity());
+                m.put("currency_id", "ARS");
+                m.put("unit_price", item.price());
+                return m;
+            })
+            .toList();
+
+    Map<String, Object> body = new HashMap<>();
+    body.put("items", mpItems);
+
+    Map<String, Object> backUrls = new HashMap<>();
+    backUrls.put("success", "https://mysterefragancias.com/success.html");
+    backUrls.put("failure", "https://mysterefragancias.com/failure.html");
+    backUrls.put("pending", "https://mysterefragancias.com/pending.html");
+
+    body.put("back_urls", backUrls);
+    body.put("auto_return", "approved");
+
+    // 🔥 HEADERS CORRECTOS
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(accessToken);
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+    ResponseEntity<Map> response;
+
+    try {
+        response = rest.exchange(
+                url,
+                HttpMethod.POST,
+                entity,
+                Map.class
+        );
+    } catch (Exception e) {
+        throw new RuntimeException("Mercado Pago rechazó la preferencia");
+    }
+
+    Map resBody = response.getBody();
+
+    if (resBody == null || !resBody.containsKey("init_point")) {
+        throw new RuntimeException("Mercado Pago no devolvió init_point");
+    }
+
+    String initPoint = resBody.get("init_point").toString();
+    String id = resBody.get("id").toString();
+
+    Pedido pedido = new Pedido();
+    pedido.setFecha(LocalDateTime.now());
+    pedido.setMetodoPago("MERCADO_PAGO");
+    pedido.setEstado("PENDIENTE");
+
+    int total = request.items().stream()
+            .mapToInt(i -> i.price() * i.quantity())
+            .sum();
+
+    pedido.setTotal(total);
+    pedido.setDetalle(request.items().toString());
+
+    pedidoRepo.save(pedido);
+
+    return new PreferenceResponse(id, initPoint);
+}
+
 }
