@@ -741,32 +741,31 @@ footer {
 }
 
 
-/* ===== FIX MOBILE MERCADO PAGO ===== */
+/* ===== MOBILE TOUCH FIX DEFINITIVO ===== */
 @media (max-width: 768px) {
 
-  .hero-slider {
-    height: auto !important;
-    min-height: unset !important;
-    max-height: unset !important;
+  body {
+    overflow-x: hidden;
   }
 
-  .cart-modal {
-    z-index: 99999 !important;
+  .hero-slider,
+  .slides,
+  .slide {
+    pointer-events: none !important;
   }
 
+  .cart-modal,
   .cart-content {
-    position: relative;
-    z-index: 99999 !important;
+    pointer-events: auto !important;
+    z-index: 999999 !important;
   }
 
   #payMP {
-    position: relative;
-    z-index: 999999 !important;
     pointer-events: auto !important;
+    touch-action: manipulation !important;
+    z-index: 9999999 !important;
   }
-
 }
-
 
 
 
