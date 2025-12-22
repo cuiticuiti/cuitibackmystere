@@ -339,20 +339,25 @@ const envio = document.getElementById("shippingMethod")?.value || "retiro";
 // =========================
 
 
+// ====== MERCADO PAGO MOBILE SAFE ======
 let pagando = false;
 
-payMpBtn.addEventListener("click", async (e) => {
+function iniciarPagoMP(e) {
     e.preventDefault();
+    e.stopPropagation();
 
     if (pagando) return;
     pagando = true;
 
-    try {
-        await pagar();
-    } finally {
-        pagando = false;
-    }
-});
+    pagar();
+}
+
+// TOUCH primero (mobile)
+payMpBtn.addEventListener("touchstart", iniciarPagoMP, { passive: false });
+
+// CLICK fallback (desktop)
+payMpBtn.addEventListener("click", iniciarPagoMP);
+
 
 
 async function pagar() {
