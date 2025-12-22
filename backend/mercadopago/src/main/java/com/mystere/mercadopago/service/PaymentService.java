@@ -80,6 +80,8 @@ public class PaymentService {
     HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
     ResponseEntity<Map> response;
+System.out.println("MP TOKEN = [" + accessToken + "]");
+System.out.println("BODY MP = " + body);
 
     try {
         response = rest.exchange(
@@ -112,7 +114,7 @@ public class PaymentService {
 
     pedido.setTotal(total);
     pedido.setDetalle(request.items().toString());
-       System.out.println("MP TOKEN = " + accessToken);
+      
 
 
     pedidoRepo.save(pedido);
