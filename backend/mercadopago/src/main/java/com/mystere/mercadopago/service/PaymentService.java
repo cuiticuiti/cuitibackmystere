@@ -71,23 +71,30 @@ public class PaymentService {
         // ===============================
         // GUARDAR PEDIDO
         // ===============================
-        Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDateTime.now());
-        pedido.setMetodoPago("MERCADO_PAGO");
-        pedido.setEstado("PENDIENTE");
+        try {
+    Pedido pedido = new Pedido();
+    pedido.setFecha(LocalDateTime.now());
+    pedido.setMetodoPago("MERCADO_PAGO");
+    pedido.setEstado("PENDIENTE");
 
-        int total = request.items().stream()
-                .mapToInt(i -> i.price() * i.quantity())
-                .sum();
+    pedido.setTotal(total);
+    pedido.setDetalle(
+            request.items().stream()
+                    .map(i -> i.title() + " x" + i.quantity())
+                    .toList()
+                    .toString()
+    );
 
-        pedido.setTotal(total);
-        pedido.setDetalle(request.items().toString());
+    if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+        pedido.setCodigoDescuento(request.codigoDescuento().toUpperCase());
+    }
 
-        if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-            pedido.setCodigoDescuento(request.codigoDescuento().toUpperCase());
-        }
+    pedidoRepo.save(pedido);
 
-        pedidoRepo.save(pedido);
+} catch (Exception e) {
+    System.err.println("ERROR guardando pedido: " + e.getMessage());
+}
+
 
     
 
