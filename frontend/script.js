@@ -277,6 +277,13 @@ function renderCart() {
     } else {
         document.getElementById("cartDiscountLine").style.display = "none";
     }
+    // 🔥 FIX MOBILE: resetear botón de pago SIEMPRE
+if (payMpBtn) {
+    payMpBtn.disabled = false;
+    payMpBtn.textContent = "Pagar con Mercado Pago";
+    pagando = false;
+}
+
 
 
     
@@ -374,17 +381,17 @@ async function pagar() {
     try {
         const items = agruparItems();
 
-       const body = {
+     const body = {
     items: items.map(i => ({
         title: i.title,
         quantity: i.quantity,
         price: i.price
-    }))
+    })),
+    codigoDescuento: discount > 0
+        ? discountInput.value.trim().toUpperCase()
+        : null
 };
 
-if (discount > 0) {
-    body.codigoDescuento = discountInput.value.trim().toUpperCase();
-}
 
 
         const res = await fetch(`${API_URL}/api/pay/create`, {
