@@ -112,6 +112,8 @@ public class PaymentService {
 
     pedido.setTotal(total);
     pedido.setDetalle(request.items().toString());
+       System.out.println("MP TOKEN = " + accessToken);
+
 
     pedidoRepo.save(pedido);
 
