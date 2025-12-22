@@ -71,6 +71,12 @@ public class PaymentService {
         // ===============================
         // GUARDAR PEDIDO
         // ===============================
+      
+        int total = request.items().stream()
+        .filter(i -> i.price() != null && i.quantity() != null)
+        .mapToInt(i -> i.price() * i.quantity())
+        .sum();
+
         try {
     Pedido pedido = new Pedido();
     pedido.setFecha(LocalDateTime.now());
@@ -78,6 +84,7 @@ public class PaymentService {
     pedido.setEstado("PENDIENTE");
 
     pedido.setTotal(total);
+
     pedido.setDetalle(
             request.items().stream()
                     .map(i -> i.title() + " x" + i.quantity())
@@ -94,6 +101,7 @@ public class PaymentService {
 } catch (Exception e) {
     System.err.println("ERROR guardando pedido: " + e.getMessage());
 }
+
 
 
     
