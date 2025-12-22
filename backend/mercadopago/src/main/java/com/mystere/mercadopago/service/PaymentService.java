@@ -79,20 +79,16 @@ public class PaymentService {
 
     HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-    ResponseEntity<Map> response;
-System.out.println("MP TOKEN = [" + accessToken + "]");
-System.out.println("BODY MP = " + body);
+   ResponseEntity<Map> response = rest.exchange(
+        url,
+        HttpMethod.POST,
+        entity,
+        Map.class
+);
 
-    try {
-        response = rest.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-    } catch (Exception e) {
-        throw new RuntimeException("Mercado Pago rechazó la preferencia");
-    }
+System.out.println("STATUS MP = " + response.getStatusCode());
+System.out.println("RESPUESTA MP = " + response.getBody());
+
 
     Map resBody = response.getBody();
 
