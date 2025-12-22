@@ -16,8 +16,15 @@ public class PaymentController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<PreferenceResponse> create(@RequestBody PaymentRequest request) {
-        PreferenceResponse pref = paymentService.createPreference(request);
-        return ResponseEntity.ok(pref);
+    public ResponseEntity<?> create(@RequestBody PaymentRequest request) {
+        try {
+            PreferenceResponse pref = paymentService.createPreference(request);
+            return ResponseEntity.ok(pref);
+        } catch (Exception e) {
+            e.printStackTrace(); // 🔥 esto lo vas a ver en Render
+            return ResponseEntity
+                    .status(400)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 }
