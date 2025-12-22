@@ -336,65 +336,67 @@ const envio = document.getElementById("shippingMethod")?.value || "retiro";
 // =========================
 // MERCADO PAGO
 // =========================
+
+
 payMpBtn.onclick = pagar;
 
 async function pagar() {
-    if (cart.length === 0) return alert("Tu carrito está vacío.");
+    if (cart.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+    }
 
-    const items = agruparItems();
+    // 🔒 Bloquear botón para evitar doble click
+    payMpBtn.disabled = true;
+    payMpBtn.textContent = "Generando pago...";
 
-    const envio = document.getElementById("shippingMethod")?.value || "retiro";
-const subtotal = calcularSubtotal();
-const totalFinal = Math.round(subtotal * (1 - discount));
+    try {
+        const items = agruparItems();
 
-const resumen = items
-  .map(i => `• ${i.title} x${i.quantity} → $${i.total}`)
-  .join("\n");
+        const envio = document.getElementById("shippingMethod")?.value || "retiro";
+        const subtotal = calcularSubtotal();
+        const totalFinal = Math.round(subtotal * (1 - discount));
 
-localStorage.setItem(
-  "lastOrder",
-  `${resumen}\n\nSubtotal: $${subtotal}\nDescuento: ${Math.round(discount*100)}%\nTOTAL: $${totalFinal}\nEntrega: ${envio}`
-);
+        const body = {
+            items: items.map(i => ({
+                title: i.title,
+                quantity: i.quantity,
+                price: Math.round(i.price * (1 - discount))
+            })),
+            codigoDescuento: discount > 0
+                ? discountInput.value.trim().toUpperCase()
+                : null
+        };
 
+        const res = await fetch(`${API_URL}/api/pay/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
 
+        if (!res.ok) {
+            throw new Error("Error HTTP " + res.status);
+        }
 
-  const body = {
-    items: items.map(i => ({
-        title: i.title,
-        quantity: i.quantity,
-        price: Math.max(1, Math.round(i.price * (1 - discount)))
+        const data = await res.json();
 
-    })),
-    codigoDescuento: discount > 0
-        ? discountInput.value.trim().toUpperCase()
-        : null
-};
-    if (appliedCode) {
-    await fetch(`${API_URL}/api/descuentos/usar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ codigo: appliedCode })
-    });
-}
+        const url = data.init_point || data.initPoint;
+        if (!url) {
+            console.error("Respuesta MP inválida:", data);
+            throw new Error("No se recibió init_point");
+        }
 
+        // 🚀 Redirección REAL
+        window.location.href = url;
 
+    } catch (e) {
+        console.error("ERROR PAGO:", e);
+        alert("No se pudo generar el pago. Probá de nuevo.");
 
-    const res = await fetch(`${API_URL}/api/pay/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
-
-   const data = await res.json();
-
-const url = data.init_point || data.initPoint;
-if (!url) {
-    console.error("Respuesta MP:", data);
-    alert("Error generando pago. Probá de nuevo.");
-    return;
-}
-window.location.href = url;
-
+        // 🔓 Rehabilitar botón si falla
+        payMpBtn.disabled = false;
+        payMpBtn.textContent = "Pagar con Mercado Pago";
+    }
 }
 
 
