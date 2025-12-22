@@ -16,20 +16,16 @@
 <div class="box">
     <h1>❌ Pago rechazado</h1>
     <p>No se pudo procesar tu pago.</p>
-    <p>Revisa tus datos o intenta con otro método.</p>
+    <p>No se realizó ningún cobro.</p>
 
-   <a href="index.html#carrito">Volver al carrito</a>
-
+    <a href="index.html">Volver a la tienda</a>
 </div>
-<a href="index.html?cart=open">Volver al carrito</a>
+
 <script>
-if (localStorage.getItem("forceCart") === "1") {
+  // 🔥 CLAVE: limpiar estado del pago
   localStorage.removeItem("forceCart");
-  document.getElementById("cartModal").style.display = "block";
-}
-
-
-
+  localStorage.removeItem("lastOrder");
+</script>
 
 </body>
 </html>
