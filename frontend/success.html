@@ -37,23 +37,25 @@
 <div class="box">
     <h1>¡Pago aprobado! ✔</h1>
     <p>Gracias por tu compra en Mystère Fragancias.</p>
-
-    <p>Estamos preparando tu pedido y te enviaremos un mensaje en breve.</p>
+    <p>Estamos preparando tu pedido.</p>
 
     <a href="index.html">Volver a la tienda</a>
 </div>
+
 <a id="wpBtn" href="#" target="_blank">Enviar pedido por WhatsApp</a>
 
 <script>
-const pedido = localStorage.getItem("lastOrder");
-if (pedido) {
-  document.getElementById("wpBtn").href =
-    "https://wa.me/2615161952?text=" +
-    encodeURIComponent("Pago confirmado:\n\n" + pedido);
-}
+  const pedido = localStorage.getItem("lastOrder");
+  if (pedido) {
+    document.getElementById("wpBtn").href =
+      "https://wa.me/2615161952?text=" +
+      encodeURIComponent("Pago confirmado:\n\n" + pedido);
+  }
+
+  // 🔥 LIMPIAR ESTADO
+  localStorage.removeItem("forceCart");
+  localStorage.removeItem("catalogo_cache");
 </script>
-
-
 
 </body>
 </html>
