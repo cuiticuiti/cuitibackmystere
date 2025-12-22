@@ -741,6 +741,31 @@ footer {
 }
 
 
+/* ===== FIX MOBILE MERCADO PAGO ===== */
+@media (max-width: 768px) {
+
+  .hero-slider {
+    height: auto !important;
+    min-height: unset !important;
+    max-height: unset !important;
+  }
+
+  .cart-modal {
+    z-index: 99999 !important;
+  }
+
+  .cart-content {
+    position: relative;
+    z-index: 99999 !important;
+  }
+
+  #payMP {
+    position: relative;
+    z-index: 999999 !important;
+    pointer-events: auto !important;
+  }
+
+}
 
 
 
