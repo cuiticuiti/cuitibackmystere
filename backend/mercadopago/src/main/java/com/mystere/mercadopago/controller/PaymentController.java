@@ -3,6 +3,8 @@ package com.mystere.mercadopago.controller;
 import com.mystere.mercadopago.service.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/pay")
@@ -25,6 +27,7 @@ public class PaymentController {
             return ResponseEntity
                     .status(400)
                     .body(Map.of("error", e.getMessage()));
+;
         }
     }
 }
