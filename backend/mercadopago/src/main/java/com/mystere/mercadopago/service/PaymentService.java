@@ -92,13 +92,13 @@ System.out.println("RESPUESTA MP = " + response.getBody());
 
     Map resBody = response.getBody();
 
- if (resBody == null || !resBody.containsKey("punto_de_inicio")) {
+if (resBody == null || !resBody.containsKey("punto_de_inicio")) {
     throw new RuntimeException("Mercado Pago no devolvió punto_de_inicio");
 }
 
 String initPoint = resBody.get("punto_de_inicio").toString();
+String id = resBody.get("id").toString();
 
-    String id = resBody.get("id").toString();
 
     Pedido pedido = new Pedido();
     pedido.setFecha(LocalDateTime.now());
