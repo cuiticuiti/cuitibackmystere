@@ -7,7 +7,8 @@ console.log("SCRIPT CARGADO OK");
 // =========================
 // REFERENCIAS AL DOM
 // =========================
-const API_URL = "https://cuitibackmystere.onrender.com";
+const API_URL = "https://cuitibackmystere.onrender.com".replace(/\/$/, "");
+
 
 const container      = document.getElementById("productsContainer");
 const cartModal      = document.getElementById("cartModal");
@@ -347,11 +348,6 @@ let pagando = false;
 
 payMpBtn.onclick = pagar;
 
-
-
-
-let pagando = false;
-
 async function pagar() {
     if (cart.length === 0) {
         alert("Tu carrito está vacío.");
@@ -372,12 +368,9 @@ async function pagar() {
                 title: i.title,
                 quantity: i.quantity,
                 price: i.price
-            }))
+            })),
+            codigoDescuento: discountInput?.value?.trim().toUpperCase() || ""
         };
-
-        if (discount > 0) {
-            body.codigoDescuento = discountInput.value.trim().toUpperCase();
-        }
 
         const res = await fetch(`${API_URL}/api/pay/create`, {
             method: "POST",
@@ -390,12 +383,11 @@ async function pagar() {
         const data = await res.json();
         if (!data.initPoint) throw new Error("Sin initPoint");
 
-        // 🔥 MOBILE + DESKTOP OK
         window.location.href = data.initPoint;
 
     } catch (err) {
         console.error(err);
-        alert("No se pudo iniciar el pago. Probá nuevamente.");
+        alert("No se pudo iniciar el pago.");
 
         pagando = false;
         payMpBtn.disabled = false;
