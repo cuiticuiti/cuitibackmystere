@@ -1,35 +1,35 @@
-console.log("SCRIPT OK");
-
-// ================= CONFIG =================
 const API_URL = "https://cuitibackmystere.onrender.com";
+const PHONE = "2615161952";
 
-// ================= DOM =================
 const container = document.getElementById("productsContainer");
+const cartItems = document.getElementById("cartItems");
 const cartCountSpan = document.getElementById("cartCount");
+const payMpBtn = document.getElementById("payMP");
 
-// ================= STATE =================
 let products = [];
 let cart = [];
 
-// ================= LOAD PRODUCTS =================
+// =========================
+// CARGAR PRODUCTOS
+// =========================
 async function cargarProductos() {
-  container.innerHTML = "<p>Cargando catálogo...</p>";
-
+  container.innerHTML = "Cargando catálogo...";
   try {
     const res = await fetch(`${API_URL}/api/productos`);
-    if (!res.ok) throw new Error("HTTP error");
-    products = await res.json();
+    const data = await res.json();
+    products = data;
     renderProducts();
   } catch (e) {
+    container.innerHTML = "Error cargando catálogo";
     console.error(e);
-    container.innerHTML = "<p>Error cargando catálogo</p>";
   }
 }
 
-// ================= RENDER =================
+// =========================
+// MOSTRAR PRODUCTOS
+// =========================
 function renderProducts() {
   container.innerHTML = "";
-
   products.forEach((p, i) => {
     container.innerHTML += `
       <div class="product-card">
@@ -42,11 +42,46 @@ function renderProducts() {
   });
 }
 
-// ================= CART =================
 function addToCart(i) {
   cart.push(products[i]);
   cartCountSpan.textContent = cart.length;
+  renderCart();
 }
 
-// ================= START =================
+function renderCart() {
+  cartItems.innerHTML = "";
+  cart.forEach(p => {
+    cartItems.innerHTML += `<p>${p.nombre} - $${p.precio}</p>`;
+  });
+}
+
+// =========================
+// MERCADO PAGO (SIMPLE)
+// =========================
+payMpBtn.onclick = pagar;
+
+async function pagar() {
+  if (cart.length === 0) {
+    alert("Carrito vacío");
+    return;
+  }
+
+  const body = {
+    items: cart.map(p => ({
+      title: p.nombre,
+      quantity: 1,
+      price: p.precio
+    }))
+  };
+
+  const res = await fetch(`${API_URL}/api/pay/create`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  window.location.href = data.initPoint;
+}
+
 document.addEventListener("DOMContentLoaded", cargarProductos);
