@@ -278,11 +278,7 @@ function renderCart() {
         document.getElementById("cartDiscountLine").style.display = "none";
     }
     // 🔥 FIX MOBILE: resetear botón de pago SIEMPRE
-if (payMpBtn) {
-    payMpBtn.disabled = false;
-    payMpBtn.textContent = "Pagar con Mercado Pago";
-    pagando = false;
-}
+
 
 
 
@@ -349,23 +345,12 @@ const envio = document.getElementById("shippingMethod")?.value || "retiro";
 // ====== MERCADO PAGO MOBILE SAFE ======
 let pagando = false;
 
-function iniciarPagoMP(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (pagando) return;
-    pagando = true;
-
-    pagar();
-}
-
-// TOUCH primero (mobile)
-payMpBtn.addEventListener("touchstart", iniciarPagoMP, { passive: false });
-
-// CLICK fallback (desktop)
-payMpBtn.addEventListener("click", iniciarPagoMP);
+payMpBtn.onclick = pagar;
 
 
+
+
+let pagando = false;
 
 async function pagar() {
     if (cart.length === 0) {
@@ -373,26 +358,26 @@ async function pagar() {
         return;
     }
 
+    if (pagando) return;
+    pagando = true;
+
     payMpBtn.disabled = true;
     payMpBtn.textContent = "Redirigiendo...";
-
-    let data;
 
     try {
         const items = agruparItems();
 
-     const body = {
-    items: items.map(i => ({
-        title: i.title,
-        quantity: i.quantity,
-        price: i.price
-    })),
-    codigoDescuento: discount > 0
-        ? discountInput.value.trim().toUpperCase()
-        : null
-};
+        const body = {
+            items: items.map(i => ({
+                title: i.title,
+                quantity: i.quantity,
+                price: i.price
+            }))
+        };
 
-
+        if (discount > 0) {
+            body.codigoDescuento = discountInput.value.trim().toUpperCase();
+        }
 
         const res = await fetch(`${API_URL}/api/pay/create`, {
             method: "POST",
@@ -400,34 +385,23 @@ async function pagar() {
             body: JSON.stringify(body)
         });
 
-        if (!res.ok) throw new Error("HTTP error");
+        if (!res.ok) throw new Error("Error HTTP");
 
-        data = await res.json();
+        const data = await res.json();
+        if (!data.initPoint) throw new Error("Sin initPoint");
 
-    } catch (e) {
-        alert("Error generando el pago.");
-        payMpBtn.disabled = false;
-        payMpBtn.textContent = "Pagar con Mercado Pago";
-        return;
-    }
+        // 🔥 MOBILE + DESKTOP OK
+        window.location.href = data.initPoint;
 
-    if (!data || !data.initPoint) {
-        alert("No se pudo iniciar Mercado Pago.");
-        payMpBtn.disabled = false;
-        payMpBtn.textContent = "Pagar con Mercado Pago";
-        return;
-    }
+    } catch (err) {
+        console.error(err);
+        alert("No se pudo iniciar el pago. Probá nuevamente.");
 
-    // 🔥 ESTA LÍNEA ES CLAVE EN MOBILE
-    window.location.assign(data.initPoint);
-}
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-        payMpBtn.disabled = false;
-        payMpBtn.textContent = "Pagar con Mercado Pago";
         pagando = false;
+        payMpBtn.disabled = false;
+        payMpBtn.textContent = "Pagar con Mercado Pago";
     }
-});
+}
 
 
 // =========================
