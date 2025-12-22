@@ -15,10 +15,7 @@ java {
 
 repositories {
     mavenCentral()
-
-
 }
-
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -29,12 +26,12 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-    runtimeOnly 'com.h2database:h2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // ✅ POSTGRESQL (PRODUCCIÓN)
+    runtimeOnly 'org.postgresql:postgresql'
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-
 
 tasks.named('test') {
     useJUnitPlatform()
