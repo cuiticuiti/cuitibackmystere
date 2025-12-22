@@ -346,13 +346,6 @@ const envio = document.getElementById("shippingMethod")?.value || "retiro";
 // ====== MERCADO PAGO MOBILE SAFE ======
 let pagando = false;
 
-payMpBtn.onclick = pagar;
-
-
-
-
-let pagando = false;
-
 async function pagar() {
     if (cart.length === 0) {
         alert("Tu carrito está vacío.");
@@ -368,19 +361,14 @@ async function pagar() {
     try {
         const items = agruparItems();
 
-       const body = {
-    items: items.map(i => ({
-        title: i.title,
-        quantity: i.quantity,
-        price: i.price
-    })),
-    codigoDescuento: discountInput?.value?.trim() || ""
-};
-
-
-        if (discount > 0) {
-            body.codigoDescuento = discountInput.value.trim().toUpperCase();
-        }
+        const body = {
+            items: items.map(i => ({
+                title: i.title,
+                quantity: i.quantity,
+                price: i.price
+            })),
+            codigoDescuento: discountInput?.value?.trim() || ""
+        };
 
         const res = await fetch(`${API_URL}/api/pay/create`, {
             method: "POST",
@@ -393,18 +381,20 @@ async function pagar() {
         const data = await res.json();
         if (!data.initPoint) throw new Error("Sin initPoint");
 
-        // 🔥 MOBILE + DESKTOP OK
         window.location.href = data.initPoint;
 
     } catch (err) {
         console.error(err);
-        alert("No se pudo iniciar el pago. Probá nuevamente.");
+        alert("No se pudo iniciar el pago.");
 
         pagando = false;
         payMpBtn.disabled = false;
         payMpBtn.textContent = "Pagar con Mercado Pago";
     }
 }
+
+payMpBtn.onclick = pagar;
+
 
 
 // =========================
