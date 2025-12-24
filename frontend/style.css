@@ -769,15 +769,30 @@ footer {
     margin: 40px 0;
 }
 
-.custom-search button {
-    padding: 12px 20px;
-    background: #8c5e3c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
+.not-found-box {
+  text-align: center;
+  margin: 40px 0;
 }
+
+.not-found-box p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.not-found-box button {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.not-found-box button:hover {
+  background: #333;
+}
+
 
 
 
