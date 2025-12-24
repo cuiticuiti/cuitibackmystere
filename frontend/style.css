@@ -764,34 +764,21 @@ footer {
     position: relative;
     z-index: 10;
 }
-.custom-search {
-    text-align: center;
-    margin: 40px 0;
-}
-
-.not-found-box {
-  text-align: center;
-  margin: 40px 0;
-}
-
-.not-found-box p {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.not-found-box button {
-  background: #111;
-  color: white;
+.help-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  border-radius: 12px;
   border: none;
-  padding: 12px 22px;
-  border-radius: 8px;
+  background: #8c5e3c;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
-  font-weight: 600;
+}
+.help-btn:hover {
+  background: #73492d;
 }
 
-.not-found-box button:hover {
-  background: #333;
-}
 
 
 
