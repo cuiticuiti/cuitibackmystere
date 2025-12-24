@@ -527,12 +527,13 @@ function cambiarOrden(campo) {
     }
     aplicarFiltros();
 }
-function consultarPersonalizado() {
+function noEncontrado() {
     const texto = encodeURIComponent(
-        "Hola! No encontré el perfume que estoy buscando. ¿Podés ayudarme?"
+        "Hola! No encontré el perfume que estoy buscando. ¿Me podés ayudar?"
     );
     window.open(`https://wa.me/54${PHONE}?text=${texto}`, "_blank");
 }
+
 
 window.filtrar = filtrar;
 window.changeQty = changeQty;
