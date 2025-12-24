@@ -378,10 +378,19 @@ async function pagar() {
 
         if (!res.ok) throw new Error("Error HTTP");
 
-        const data = await res.json();
-        if (!data.initPoint) throw new Error("Sin initPoint");
+       const data = await res.json();
 
-        window.location.href = data.initPoint;
+console.log("RESPUESTA PAY:", data);
+
+const url = data.initPoint || data.init_point || data.punto_de_inicio;
+
+if (!url) {
+    console.error("Respuesta backend sin initPoint:", data);
+    throw new Error("Sin initPoint");
+}
+
+window.location.href = url;
+
 
     } catch (err) {
         console.error(err);
