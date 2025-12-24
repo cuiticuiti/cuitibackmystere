@@ -1,28 +1,3 @@
-package com.mystere.mercadopago.service;
-
-import com.mystere.mercadopago.controller.PaymentRequest;
-import com.mystere.mercadopago.controller.PreferenceResponse;
-import com.mystere.mercadopago.model.Pedido;
-import com.mystere.mercadopago.model.CodigoDescuento;
-import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
-import com.mystere.mercadopago.repository.PedidoRepository;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 @Service
 public class PaymentService {
 
@@ -33,10 +8,8 @@ public class PaymentService {
     private final CodigoDescuentoRepository codigoRepo;
     private final PedidoRepository pedidoRepo;
 
-    public PaymentService(
-            CodigoDescuentoRepository codigoRepo,
-            PedidoRepository pedidoRepo
-    ) {
+    public PaymentService(CodigoDescuentoRepository codigoRepo,
+                          PedidoRepository pedidoRepo) {
         this.codigoRepo = codigoRepo;
         this.pedidoRepo = pedidoRepo;
     }
@@ -47,46 +20,39 @@ public class PaymentService {
             throw new RuntimeException("Pedido sin items");
         }
 
-        // ===============================
-        // DESCUENTO (SEGURO Y SIMPLE)
-        // ===============================
-        double descuento = 0.0;
+        // =========================
+        // CUPÓN
+        // =========================
+        double descuento = 0;
 
         if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-            Optional<CodigoDescuento> codOpt =
-                    codigoRepo.findByCodigo(request.codigoDescuento());
-
-            if (codOpt.isPresent()) {
-                descuento = codOpt.get().getPorcentaje() / 100.0;
-            }
+            codigoRepo.findByCodigoIgnoreCase(request.codigoDescuento().trim())
+                    .filter(c -> c.isActivo())
+                    .ifPresent(c -> descuento = c.getPorcentaje() / 100.0);
         }
 
-        final double descuentoFinal = descuento; // 👈 CLAVE para streams
-
-        // ===============================
-        // ITEMS CON PRECIO YA DESCONTADO
-        // ===============================
+        // =========================
+        // ITEMS PARA MP (PRECIO FINAL)
+        // =========================
         List<Map<String, Object>> mpItems = request.items().stream()
                 .map(item -> {
-                    Map<String, Object> m = new HashMap<>();
-
                     double precioFinal = item.price();
-                    if (descuentoFinal > 0) {
-                        precioFinal = precioFinal * (1 - descuentoFinal);
+                    if (descuento > 0) {
+                        precioFinal = precioFinal * (1 - descuento);
                     }
 
+                    Map<String, Object> m = new HashMap<>();
                     m.put("title", item.title());
                     m.put("quantity", item.quantity());
                     m.put("currency_id", "ARS");
                     m.put("unit_price", Math.round(precioFinal));
-
                     return m;
                 })
                 .toList();
 
-        // ===============================
+        // =========================
         // BODY MP
-        // ===============================
+        // =========================
         Map<String, Object> body = new HashMap<>();
         body.put("items", mpItems);
 
@@ -112,31 +78,25 @@ public class PaymentService {
         );
 
         Map resBody = response.getBody();
-        if (resBody == null || resBody.get("init_point") == null) {
-            throw new RuntimeException("Mercado Pago no devolvió init_point");
-        }
+        if (resBody == null) throw new RuntimeException("Respuesta vacía MP");
 
         String initPoint = resBody.get("init_point").toString();
         String id = resBody.get("id").toString();
 
-        // ===============================
+        // =========================
         // GUARDAR PEDIDO
-        // ===============================
+        // =========================
+        int totalFinal = mpItems.stream()
+                .mapToInt(i -> (int) i.get("unit_price") * (int) i.get("quantity"))
+                .sum();
+
         Pedido pedido = new Pedido();
         pedido.setFecha(LocalDateTime.now());
         pedido.setMetodoPago("MERCADO_PAGO");
         pedido.setEstado("PENDIENTE");
-
-        int total = request.items().stream()
-                .mapToInt(i -> i.price() * i.quantity())
-                .sum();
-
-        if (descuentoFinal > 0) {
-            total = (int) Math.round(total * (1 - descuentoFinal));
-        }
-
-        pedido.setTotal(total);
+        pedido.setTotal(totalFinal);
         pedido.setDetalle(request.items().toString());
+
         pedidoRepo.save(pedido);
 
         return new PreferenceResponse(id, initPoint);
