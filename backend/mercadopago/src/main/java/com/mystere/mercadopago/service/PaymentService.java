@@ -50,7 +50,6 @@ public class PaymentService {
 
 if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
     codigoRepo.findByCodigo(request.codigoDescuento().trim())
-            .filter(c -> c.isActivo())
             .ifPresent(c -> descuento = c.getPorcentaje() / 100.0);
 }
 
