@@ -527,6 +527,13 @@ function cambiarOrden(campo) {
     }
     aplicarFiltros();
 }
+function consultarPersonalizado() {
+    const texto = encodeURIComponent(
+        "Hola! No encontré el perfume que estoy buscando. ¿Podés ayudarme?"
+    );
+    window.open(`https://wa.me/54${PHONE}?text=${texto}`, "_blank");
+}
+
 window.filtrar = filtrar;
 window.changeQty = changeQty;
 window.addToCart = addToCart;
