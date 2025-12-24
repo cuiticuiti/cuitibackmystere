@@ -46,19 +46,19 @@ public class PaymentService {
             throw new RuntimeException("Pedido sin items");
         }
 
-        // 🔥 1️⃣ CALCULAR DESCUENTO (SI HAY CUPÓN)
+        // 🔥 1️⃣ OBTENER DESCUENTO (SIN TOCAR USOS)
         double descuento = 0.0;
 
         if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-            var codigo = codigoRepo.findByCodigo(request.codigoDescuento()).orElse(null);
-            if (codigo != null && codigo.getUsosDisponibles() > 0) {
-                descuento = codigo.getPorcentaje() / 100.0;
+            var codigoOpt = codigoRepo.findByCodigo(request.codigoDescuento());
+            if (codigoOpt.isPresent()) {
+                descuento = codigoOpt.get().getPorcentaje() / 100.0;
             }
         }
 
         String url = "https://api.mercadopago.com/checkout/preferences";
 
-        // 🔥 2️⃣ CREAR ITEMS CON PRECIO YA DESCONTADO
+        // 🔥 2️⃣ ITEMS CON PRECIO YA DESCONTADO
         List<Map<String, Object>> mpItems = request.items().stream()
                 .map(item -> {
                     Map<String, Object> m = new HashMap<>();
@@ -71,7 +71,7 @@ public class PaymentService {
                     m.put("title", item.title());
                     m.put("quantity", item.quantity());
                     m.put("currency_id", "ARS");
-                    m.put("unit_price", Math.round(precioFinal)); // MP seguro
+                    m.put("unit_price", Math.round(precioFinal));
 
                     return m;
                 })
@@ -100,9 +100,6 @@ public class PaymentService {
                 entity,
                 Map.class
         );
-
-        System.out.println("STATUS MP = " + response.getStatusCode());
-        System.out.println("RESPUESTA MP = " + response.getBody());
 
         Map resBody = response.getBody();
 
@@ -139,14 +136,6 @@ public class PaymentService {
         pedido.setDetalle(request.items().toString());
 
         pedidoRepo.save(pedido);
-
-        // 🔥 4️⃣ DESCONTAR USO DEL CUPÓN (SI APLICÓ)
-        if (descuento > 0 && request.codigoDescuento() != null) {
-            codigoRepo.findByCodigo(request.codigoDescuento()).ifPresent(c -> {
-                c.setUsosDisponibles(c.getUsosDisponibles() - 1);
-                codigoRepo.save(c);
-            });
-        }
 
         return new PreferenceResponse(id, initPoint);
     }
