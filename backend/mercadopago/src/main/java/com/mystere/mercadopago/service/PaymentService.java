@@ -47,38 +47,37 @@ public class PaymentService {
     }
 
     // 1️⃣ DESCUENTO
-    double descuento = 0.0;
+    // 1️⃣ calcular descuento
+double descuento = 0.0;
 
-    if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-        var codigoOpt = codigoRepo.findByCodigo(request.codigoDescuento());
-        if (codigoOpt.isPresent()) {
-            descuento = codigoOpt.get().getPorcentaje() / 100.0;
-        }
+if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+    var codigoOpt = codigoRepo.findByCodigo(request.codigoDescuento());
+    if (codigoOpt.isPresent()) {
+        descuento = codigoOpt.get().getPorcentaje() / 100.0;
     }
+}
 
-    // 🔥 FIX JAVA LAMBDA
-    final double descuentoFinal = descuento;
+final double descuentoFinal = descuento;
 
-    String url = "https://api.mercadopago.com/checkout/preferences";
+// 2️⃣ ITEMS CON PRECIO YA DESCONTADO
+List<Map<String, Object>> mpItems = request.items().stream()
+        .map(item -> {
+            Map<String, Object> m = new HashMap<>();
 
-    // 2️⃣ ITEMS CON PRECIO YA DESCONTADO
-    List<Map<String, Object>> mpItems = request.items().stream()
-            .map(item -> {
-                Map<String, Object> m = new HashMap<>();
+            double precioFinal = item.price();
+            if (descuentoFinal > 0) {
+                precioFinal = precioFinal * (1 - descuentoFinal);
+            }
 
-                double precioFinal = item.price();
-                if (descuentoFinal > 0) {
-                    precioFinal = precioFinal * (1 - descuentoFinal);
-                }
+            m.put("title", item.title());
+            m.put("quantity", item.quantity());
+            m.put("currency_id", "ARS");
+            m.put("unit_price", Math.round(precioFinal));
 
-                m.put("title", item.title());
-                m.put("quantity", item.quantity());
-                m.put("currency_id", "ARS");
-                m.put("unit_price", Math.round(precioFinal));
+            return m;
+        })
+        .toList();
 
-                return m;
-            })
-            .toList();
 
     Map<String, Object> body = new HashMap<>();
     body.put("items", mpItems);
