@@ -92,11 +92,22 @@ System.out.println("RESPUESTA MP = " + response.getBody());
 
     Map resBody = response.getBody();
 
-if (resBody == null || !resBody.containsKey("punto_de_inicio")) {
-    throw new RuntimeException("Mercado Pago no devolvió punto_de_inicio");
+if (resBody == null) {
+    throw new RuntimeException("Respuesta vacía de Mercado Pago");
 }
 
-String initPoint = resBody.get("punto_de_inicio").toString();
+Object initPointObj =
+        resBody.get("init_point") != null
+                ? resBody.get("init_point")
+                : resBody.get("punto_de_inicio");
+
+if (initPointObj == null) {
+    throw new RuntimeException("Mercado Pago no devolvió initPoint");
+}
+
+String initPoint = initPointObj.toString();
+String id = resBody.get("id").toString();
+
 String id = resBody.get("id").toString();
 
 
