@@ -46,13 +46,14 @@ public class PaymentService {
         // =========================
         // CUPÓN
         // =========================
-        double descuento = 0;
+       double descuento = 0;
 
-        if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-            codigoRepo.findByCodigoIgnoreCase(request.codigoDescuento().trim())
-                    .filter(c -> c.isActivo())
-                    .ifPresent(c -> descuento = c.getPorcentaje() / 100.0);
-        }
+if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+    codigoRepo.findByCodigo(request.codigoDescuento().trim())
+            .filter(c -> c.isActivo())
+            .ifPresent(c -> descuento = c.getPorcentaje() / 100.0);
+}
+
 
         // =========================
         // ITEMS PARA MP (PRECIO FINAL)
