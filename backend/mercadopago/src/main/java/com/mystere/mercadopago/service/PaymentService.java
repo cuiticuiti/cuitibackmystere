@@ -108,7 +108,6 @@ if (initPointObj == null) {
 String initPoint = initPointObj.toString();
 String id = resBody.get("id").toString();
 
-String id = resBody.get("id").toString();
 
 
     Pedido pedido = new Pedido();
