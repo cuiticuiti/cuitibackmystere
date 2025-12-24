@@ -1,3 +1,26 @@
+package com.mystere.mercadopago.service;
+
+import com.mystere.mercadopago.controller.PaymentRequest;
+import com.mystere.mercadopago.controller.PreferenceResponse;
+import com.mystere.mercadopago.model.Pedido;
+import com.mystere.mercadopago.repository.CodigoDescuentoRepository;
+import com.mystere.mercadopago.repository.PedidoRepository;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class PaymentService {
 
