@@ -44,18 +44,21 @@ public class PaymentService {
         }
 
         // =========================
-        // CUPÓN
+        // CUPÓN (FORMA CORRECTA)
         // =========================
-       double descuento = 0;
+        final double descuento;
 
-if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-    codigoRepo.findByCodigo(request.codigoDescuento().trim())
-            .ifPresent(c -> descuento = c.getPorcentaje() / 100.0);
-}
-
+        if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+            descuento = codigoRepo
+                    .findByCodigo(request.codigoDescuento().trim())
+                    .map(c -> c.getPorcentaje() / 100.0)
+                    .orElse(0.0);
+        } else {
+            descuento = 0.0;
+        }
 
         // =========================
-        // ITEMS PARA MP (PRECIO FINAL)
+        // ITEMS PARA MERCADO PAGO
         // =========================
         List<Map<String, Object>> mpItems = request.items().stream()
                 .map(item -> {
@@ -74,7 +77,7 @@ if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
                 .toList();
 
         // =========================
-        // BODY MP
+        // BODY MERCADO PAGO
         // =========================
         Map<String, Object> body = new HashMap<>();
         body.put("items", mpItems);
