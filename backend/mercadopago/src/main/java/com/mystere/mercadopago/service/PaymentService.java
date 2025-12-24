@@ -40,103 +40,106 @@ public class PaymentService {
         this.pedidoRepo = pedidoRepo;
     }
 
-    public PreferenceResponse createPreference(PaymentRequest request) {
+   public PreferenceResponse createPreference(PaymentRequest request) {
 
-        if (request == null || request.items() == null || request.items().isEmpty()) {
-            throw new RuntimeException("Pedido sin items");
-        }
-
-        // 🔥 1️⃣ OBTENER DESCUENTO (SIN TOCAR USOS)
-        double descuento = 0.0;
-
-        if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
-            var codigoOpt = codigoRepo.findByCodigo(request.codigoDescuento());
-            if (codigoOpt.isPresent()) {
-                descuento = codigoOpt.get().getPorcentaje() / 100.0;
-            }
-        }
-
-        String url = "https://api.mercadopago.com/checkout/preferences";
-
-        // 🔥 2️⃣ ITEMS CON PRECIO YA DESCONTADO
-        List<Map<String, Object>> mpItems = request.items().stream()
-                .map(item -> {
-                    Map<String, Object> m = new HashMap<>();
-
-                    double precioFinal = item.price();
-                    if (descuento > 0) {
-                        precioFinal = precioFinal * (1 - descuento);
-                    }
-
-                    m.put("title", item.title());
-                    m.put("quantity", item.quantity());
-                    m.put("currency_id", "ARS");
-                    m.put("unit_price", Math.round(precioFinal));
-
-                    return m;
-                })
-                .toList();
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("items", mpItems);
-
-        Map<String, Object> backUrls = new HashMap<>();
-        backUrls.put("success", "https://mysterefragancias.com/success.html");
-        backUrls.put("failure", "https://mysterefragancias.com/failure.html");
-        backUrls.put("pending", "https://mysterefragancias.com/pending.html");
-
-        body.put("back_urls", backUrls);
-        body.put("auto_return", "approved");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<Map> response = rest.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                Map.class
-        );
-
-        Map resBody = response.getBody();
-
-        if (resBody == null) {
-            throw new RuntimeException("Respuesta vacía de Mercado Pago");
-        }
-
-        Object initPointObj =
-                resBody.get("init_point") != null
-                        ? resBody.get("init_point")
-                        : resBody.get("punto_de_inicio");
-
-        if (initPointObj == null) {
-            throw new RuntimeException("Mercado Pago no devolvió initPoint");
-        }
-
-        String initPoint = initPointObj.toString();
-        String id = resBody.get("id").toString();
-
-        // 🔥 3️⃣ GUARDAR PEDIDO (TOTAL CON DESCUENTO)
-        int total = request.items().stream()
-                .mapToInt(i -> i.price() * i.quantity())
-                .sum();
-
-        if (descuento > 0) {
-            total = (int) Math.round(total * (1 - descuento));
-        }
-
-        Pedido pedido = new Pedido();
-        pedido.setFecha(LocalDateTime.now());
-        pedido.setMetodoPago("MERCADO_PAGO");
-        pedido.setEstado("PENDIENTE");
-        pedido.setTotal(total);
-        pedido.setDetalle(request.items().toString());
-
-        pedidoRepo.save(pedido);
-
-        return new PreferenceResponse(id, initPoint);
+    if (request == null || request.items() == null || request.items().isEmpty()) {
+        throw new RuntimeException("Pedido sin items");
     }
+
+    // 1️⃣ DESCUENTO
+    double descuento = 0.0;
+
+    if (request.codigoDescuento() != null && !request.codigoDescuento().isBlank()) {
+        var codigoOpt = codigoRepo.findByCodigo(request.codigoDescuento());
+        if (codigoOpt.isPresent()) {
+            descuento = codigoOpt.get().getPorcentaje() / 100.0;
+        }
+    }
+
+    // 🔥 FIX JAVA LAMBDA
+    final double descuentoFinal = descuento;
+
+    String url = "https://api.mercadopago.com/checkout/preferences";
+
+    // 2️⃣ ITEMS CON PRECIO YA DESCONTADO
+    List<Map<String, Object>> mpItems = request.items().stream()
+            .map(item -> {
+                Map<String, Object> m = new HashMap<>();
+
+                double precioFinal = item.price();
+                if (descuentoFinal > 0) {
+                    precioFinal = precioFinal * (1 - descuentoFinal);
+                }
+
+                m.put("title", item.title());
+                m.put("quantity", item.quantity());
+                m.put("currency_id", "ARS");
+                m.put("unit_price", Math.round(precioFinal));
+
+                return m;
+            })
+            .toList();
+
+    Map<String, Object> body = new HashMap<>();
+    body.put("items", mpItems);
+
+    Map<String, Object> backUrls = new HashMap<>();
+    backUrls.put("success", "https://mysterefragancias.com/success.html");
+    backUrls.put("failure", "https://mysterefragancias.com/failure.html");
+    backUrls.put("pending", "https://mysterefragancias.com/pending.html");
+
+    body.put("back_urls", backUrls);
+    body.put("auto_return", "approved");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(accessToken);
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+    ResponseEntity<Map> response = rest.exchange(
+            url,
+            HttpMethod.POST,
+            entity,
+            Map.class
+    );
+
+    Map resBody = response.getBody();
+
+    if (resBody == null) {
+        throw new RuntimeException("Respuesta vacía de Mercado Pago");
+    }
+
+    Object initPointObj = resBody.get("init_point") != null
+            ? resBody.get("init_point")
+            : resBody.get("punto_de_inicio");
+
+    if (initPointObj == null) {
+        throw new RuntimeException("Mercado Pago no devolvió initPoint");
+    }
+
+    String initPoint = initPointObj.toString();
+    String id = resBody.get("id").toString();
+
+    // 3️⃣ GUARDAR PEDIDO CON DESCUENTO
+    int total = request.items().stream()
+            .mapToInt(i -> i.price() * i.quantity())
+            .sum();
+
+    if (descuentoFinal > 0) {
+        total = (int) Math.round(total * (1 - descuentoFinal));
+    }
+
+    Pedido pedido = new Pedido();
+    pedido.setFecha(LocalDateTime.now());
+    pedido.setMetodoPago("MERCADO_PAGO");
+    pedido.setEstado("PENDIENTE");
+    pedido.setTotal(total);
+    pedido.setDetalle(request.items().toString());
+
+    pedidoRepo.save(pedido);
+
+    return new PreferenceResponse(id, initPoint);
+}
+
 }
