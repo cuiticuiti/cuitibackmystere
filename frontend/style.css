@@ -764,6 +764,21 @@ footer {
     position: relative;
     z-index: 10;
 }
+.custom-search {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.custom-search button {
+    padding: 12px 20px;
+    background: #8c5e3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
 
 
 
