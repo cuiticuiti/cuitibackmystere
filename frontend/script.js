@@ -527,12 +527,13 @@ function cambiarOrden(campo) {
     }
     aplicarFiltros();
 }
-function noEncontrado() {
-    const texto = encodeURIComponent(
-        "Hola! No encontré el perfume que estoy buscando. ¿Me podés ayudar?"
-    );
-    window.open(`https://wa.me/54${PHONE}?text=${texto}`, "_blank");
+function ayudaWhatsApp() {
+  const msg = encodeURIComponent(
+    "Hola! No encontré lo que buscaba en la web, ¿me ayudás?"
+  );
+  window.open(`https://wa.me/5492615161952?text=${msg}`, "_blank");
 }
+
 
 
 window.filtrar = filtrar;
