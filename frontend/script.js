@@ -17,7 +17,7 @@ const closeCartBtn   = document.getElementById("closeCart");
 const cartItems      = document.getElementById("cartItems");
 const cartTotal      = document.getElementById("cartTotal");
 const payCashBtn = document.getElementById("payCash");
-const payMpBtn   = document.getElementById("payMP");
+// const payMpBtn   = document.getElementById("payMP");
 
 const discountInput  = document.getElementById("discountCode");
 const discountBtn    = document.getElementById("applyDiscount");
@@ -319,31 +319,44 @@ function removeItem(index) {
 payCashBtn.onclick = pagarEfectivo;
 
 function pagarEfectivo() {
-    if (cart.length === 0) return alert("Tu carrito está vacío.");
+    if (cart.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+    }
 
-const envio = document.getElementById("shippingMethod")?.value || "retiro";
-
-
+    const envio = document.getElementById("shippingMethod")?.value || "retiro";
     const items = agruparItems();
     const subtotal = calcularSubtotal();
-    const final = subtotal * (1 - discount);
+    const totalFinal = Math.round(subtotal * (1 - discount));
 
-    let texto = "Hola! Quiero pagar en EFECTIVO:\n\n";
+    let texto = "Hola! Quiero hacer un pedido 🧴✨\n\n";
 
-    items.forEach(i => texto += `• ${i.title} x${i.quantity} → $${i.total}\n`);
+    items.forEach(i => {
+        texto += `• ${i.title} x${i.quantity} → $${i.total}\n`;
+    });
 
-    texto += `\nTotal final: $${final.toLocaleString("es-AR")}`;
-    texto += `\nEntrega: ${envio}`;
+    if (discount > 0) {
+        texto += `\n🏷 Cupón aplicado: ${appliedCode} (-${discount * 100}%)`;
+    }
 
-    window.open(`https://wa.me/54${PHONE}?text=${encodeURIComponent(texto)}`, "_blank");
+    texto += `\n\n💰 Total: $${totalFinal}`;
+    texto += `\n🚚 Entrega: ${envio}`;
+
+    window.open(
+        `https://wa.me/54${PHONE}?text=${encodeURIComponent(texto)}`,
+        "_blank"
+    );
 }
+
 
 // =========================
 // MERCADO PAGO
 // =========================
 
 
+/*
 // ====== MERCADO PAGO MOBILE SAFE ======
+
 let pagando = false;
 
 async function pagar() {
@@ -404,7 +417,7 @@ window.location.href = url;
 
 payMpBtn.onclick = pagar;
 
-
+*/
 
 // =========================
 // UTILIDADES
@@ -544,7 +557,6 @@ window.nextSlide = nextSlide;
 window.prevSlide = prevSlide;
 // === EXPORTAR FUNCIONES PARA HTML INLINE ===
 window.removeItem = removeItem;
-window.pagar = pagar;
 window.pagarEfectivo = pagarEfectivo;
 window.changeQty = changeQty;
 window.addToCart = addToCart;
