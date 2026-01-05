@@ -31,6 +31,8 @@ let products = [];
 let quantities = {};
 let cart = [];
 let discount = 0;
+let appliedCode = null;
+
 
 // =========================
 // CARGAR PRODUCTOS
@@ -324,23 +326,43 @@ function pagarEfectivo() {
         return;
     }
 
+    const pedidoId = generarPedidoId();
     const envio = document.getElementById("shippingMethod")?.value || "retiro";
     const items = agruparItems();
     const subtotal = calcularSubtotal();
     const totalFinal = Math.round(subtotal * (1 - discount));
 
-    let texto = "Hola! Quiero hacer un pedido 🧴✨\n\n";
+    let texto = `Hola! 👋✨  
+Quiero hacer el siguiente pedido en *Mystère Fragancias* 🧴  
+🧾 *Pedido:* ${pedidoId}\n\n`;
 
     items.forEach(i => {
-        texto += `• ${i.title} x${i.quantity} → $${i.total}\n`;
+        texto += `• ${i.title} x${i.quantity} → $${i.total.toLocaleString("es-AR")}\n`;
     });
 
+    texto += `\n💵 *Subtotal:* $${subtotal.toLocaleString("es-AR")}`;
+
     if (discount > 0) {
-        texto += `\n🏷 Cupón aplicado: ${appliedCode} (-${discount * 100}%)`;
+        texto += `\n🏷 *Cupón aplicado:* ${appliedCode} (-${discount * 100}%)`;
     }
 
-    texto += `\n\n💰 Total: $${totalFinal}`;
-    texto += `\n🚚 Entrega: ${envio}`;
+    texto += `\n💰 *Total final:* $${totalFinal.toLocaleString("es-AR")}\n`;
+
+    if (envio === "envio") {
+        texto += `\n🚚 *Entrega:* Envío a domicilio  
+Quedo atento/a al costo según zona.`;
+    } else {
+        texto += `\n📍 *Entrega:* Retiro en punto de entrega  
+Coordinamos por WhatsApp.`;
+    }
+
+    texto += `\n\n¡Gracias! 😊`;
+   guardarPedidoLocal(pedidoId, totalFinal);
+
+cart = [];
+cartCountSpan.textContent = 0;
+renderCart();
+
 
     window.open(
         `https://wa.me/54${PHONE}?text=${encodeURIComponent(texto)}`,
@@ -435,6 +457,28 @@ function agruparItems() {
 function calcularSubtotal() {
     return cart.reduce((acc, p) => acc + p.precio, 0);
 }
+function generarPedidoId() {
+    const fecha = new Date();
+    const y = fecha.getFullYear();
+    const m = String(fecha.getMonth() + 1).padStart(2, "0");
+    const d = String(fecha.getDate()).padStart(2, "0");
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    return `MYS-${y}${m}${d}-${rand}`;
+}
+function guardarPedidoLocal(id, total) {
+    const pedidos = JSON.parse(localStorage.getItem("pedidos_mystere") || "[]");
+
+    pedidos.push({
+        id,
+        fecha: new Date().toISOString(),
+        total,
+        items: agruparItems(),
+        descuento: discount,
+    });
+
+    localStorage.setItem("pedidos_mystere", JSON.stringify(pedidos));
+}
+
 
 // =======================
 // SLIDER PRO
