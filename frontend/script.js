@@ -27,16 +27,10 @@ const alertBox       = document.getElementById("addAlert");
 // =========================
 // ESTADO DEL CATÁLOGO
 // =========================
-let products = [];
-let quantities = {};
-let cart = [];
-let discount = 0;
-let appliedCode = null;
-let searchText = "";
-let stockFilter = "all";
 let currentCategory = "todos";
 let searchText = "";
 let stockFilter = "all";
+;
 
 
 
@@ -95,27 +89,17 @@ async function cargarProductos() {
 // =========================
 // FILTRO POR CATEGORÍAS
 // =========================
-function filtrar(categoria) {
+function filtrar(categoria, btn) {
     currentCategory = categoria;
 
     document.querySelectorAll(".top-buttons button")
-      .forEach(btn => btn.classList.remove("active"));
+      .forEach(b => b.classList.remove("active"));
 
-    event.target.classList.add("active");
-
-    renderProducts();
-}
-
-
-    document.querySelectorAll(".top-buttons button").forEach(btn => {
-        btn.classList.toggle(
-            "active",
-            btn.textContent.toLowerCase() === categoria
-        );
-    });
+    if (btn) btn.classList.add("active");
 
     renderProducts();
 }
+
 
 
 // =========================
