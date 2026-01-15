@@ -778,6 +778,36 @@ footer {
 .help-btn:hover {
   background: #73492d;
 }
+.search-box {
+  margin: 20px 0;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #d4b89f;
+  font-size: 15px;
+}
+.stock-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stock-filters button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #eee;
+  font-weight: bold;
+}
+
+.stock-filters button.active {
+  background: #8c5e3c;
+  color: white;
+}
 
 
 
