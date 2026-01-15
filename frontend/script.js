@@ -34,6 +34,9 @@ let discount = 0;
 let appliedCode = null;
 let searchText = "";
 let stockFilter = "all";
+let currentCategory = "todos";
+let searchText = "";
+let stockFilter = "all";
 
 
 
@@ -93,96 +96,82 @@ async function cargarProductos() {
 // FILTRO POR CATEGORÍAS
 // =========================
 function filtrar(categoria) {
+    currentCategory = categoria;
+
     document.querySelectorAll(".top-buttons button").forEach(btn => {
-        btn.classList.toggle("active", btn.textContent.toLowerCase() === categoria);
+        btn.classList.toggle(
+            "active",
+            btn.textContent.toLowerCase() === categoria
+        );
     });
 
-    renderProducts(categoria);
-
-    document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+    renderProducts();
 }
+
 
 // =========================
 // MOSTRAR PRODUCTOS
 // =========================
-function renderProducts(filtro = "todos") {
+function renderProducts() {
     container.innerHTML = "";
 
     products.forEach((p, index) => {
 
-      // FILTRO POR TEXTO
-if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
+        // 🔹 FILTRO CATEGORÍA
+        if (currentCategory !== "todos") {
+            if (currentCategory === "sale" && !p.sale) return;
+            if (p.genero !== currentCategory && currentCategory !== "sale") return;
+        }
 
-// FILTRO POR STOCK
-if (stockFilter === "available" && p.stock <= 0) return;
-if (stockFilter === "out" && p.stock > 0) return;
+        // 🔹 FILTRO TEXTO
+        if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
 
+        // 🔹 FILTRO STOCK
+        if (stockFilter === "available" && p.stock <= 0) return;
+        if (stockFilter === "out" && p.stock > 0) return;
 
         const tieneStock = p.stock > 0;
 
         container.innerHTML += `
         <div class="product-card">
-           <img src="https://mysterefragancias.com/${p.imagen}">
+            <img src="https://mysterefragancias.com/${p.imagen}">
 
             <div class="product-info">
-
                 ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
-
                 <h3>${p.nombre}</h3>
 
-                ${
-                    p.sale && p.precioAntes
-                    ? `
-                        <p class="price">
-                            <span class="old-price">$${p.precioAntes.toLocaleString("es-AR")}</span>
-                            <span class="new-price">$${p.precio.toLocaleString("es-AR")}</span>
-                        </p>
-                      `
-                    : `
-                        <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
-                      `
-                }
+                <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
 
                 ${
                     tieneStock
                     ? `
-                        <div class="qty-selector">
-                            <button onclick="changeQty(${index}, -1)">−</button>
-                            <span id="qty-${index}">${quantities[index] || 1}</span>
-                            <button onclick="changeQty(${index}, 1)">+</button>
-                        </div>
                         <button class="add-btn" onclick="addToCart(${index})">
                             Agregar al carrito
                         </button>
                       `
                     : `
-                        <p class="out-of-stock">Consultar por encargue</p>
+                        <p class="out-of-stock">Sin stock</p>
                         <button class="add-btn" onclick="consultarEncargo(${index})">
                             Consultar por WhatsApp
                         </button>
                       `
                 }
-
             </div>
-        </div>
-        `;
+        </div>`;
+    });
 
-       }); // fin forEach
-
-    // 👇 SI NO HAY RESULTADOS
+    // 🔻 SI NO HAY RESULTADOS
     if (container.innerHTML.trim() === "") {
         container.innerHTML = `
-          <div style="text-align:center; margin-top:30px;">
+        <div style="text-align:center; margin:30px 0">
             <p>No encontramos lo que buscás 😕</p>
             <button class="help-btn" onclick="ayudaWhatsApp()">
-              Escribinos por WhatsApp
+                Escribinos por WhatsApp
             </button>
-          </div>
-        `;
+        </div>`;
     }
 }
 
-}
 
 
 // =========================
