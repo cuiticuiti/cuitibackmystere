@@ -98,6 +98,15 @@ async function cargarProductos() {
 function filtrar(categoria) {
     currentCategory = categoria;
 
+    document.querySelectorAll(".top-buttons button")
+      .forEach(btn => btn.classList.remove("active"));
+
+    event.target.classList.add("active");
+
+    renderProducts();
+}
+
+
     document.querySelectorAll(".top-buttons button").forEach(btn => {
         btn.classList.toggle(
             "active",
@@ -117,16 +126,16 @@ function renderProducts() {
 
     products.forEach((p, index) => {
 
-        // 🔹 FILTRO CATEGORÍA
+        // 🔹 CATEGORÍA
         if (currentCategory !== "todos") {
             if (currentCategory === "sale" && !p.sale) return;
             if (p.genero !== currentCategory && currentCategory !== "sale") return;
         }
 
-        // 🔹 FILTRO TEXTO
+        // 🔹 BUSCADOR
         if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
 
-        // 🔹 FILTRO STOCK
+        // 🔹 STOCK
         if (stockFilter === "available" && p.stock <= 0) return;
         if (stockFilter === "out" && p.stock > 0) return;
 
@@ -135,42 +144,28 @@ function renderProducts() {
         container.innerHTML += `
         <div class="product-card">
             <img src="https://mysterefragancias.com/${p.imagen}">
-
             <div class="product-info">
-                ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
                 <h3>${p.nombre}</h3>
-
                 <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
 
                 ${
                     tieneStock
-                    ? `
-                        <button class="add-btn" onclick="addToCart(${index})">
-                            Agregar al carrito
-                        </button>
-                      `
-                    : `
-                        <p class="out-of-stock">Sin stock</p>
-                        <button class="add-btn" onclick="consultarEncargo(${index})">
-                            Consultar por WhatsApp
-                        </button>
-                      `
+                    ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
+                    : `<button class="add-btn" onclick="consultarEncargo(${index})">Consultar</button>`
                 }
             </div>
         </div>`;
     });
 
-    // 🔻 SI NO HAY RESULTADOS
-    if (container.innerHTML.trim() === "") {
+    if (!container.innerHTML.trim()) {
         container.innerHTML = `
-        <div style="text-align:center; margin:30px 0">
+        <div style="text-align:center;margin:30px">
             <p>No encontramos lo que buscás 😕</p>
-            <button class="help-btn" onclick="ayudaWhatsApp()">
-                Escribinos por WhatsApp
-            </button>
+            <button class="help-btn" onclick="ayudaWhatsApp()">Escribinos por WhatsApp</button>
         </div>`;
     }
 }
+
 
 
 
@@ -623,16 +618,17 @@ window.filtrar = filtrar;
 document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
 });
-function setStockFilter(type) {
+function setStockFilter(type, btn) {
   stockFilter = type;
 
   document.querySelectorAll(".stock-filters button")
     .forEach(b => b.classList.remove("active"));
 
-  event.target.classList.add("active");
+  btn.classList.add("active");
 
-  aplicarFiltros();
+  renderProducts();
 }
+
 
 function aplicarFiltros() {
   searchText = document.getElementById("searchInput").value.toLowerCase();
