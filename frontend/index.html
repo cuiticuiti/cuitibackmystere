@@ -94,6 +94,20 @@
     <!-- CATÁLOGO -->
     <section id="catalogo" class="section">
         <h2>Catálogo</h2>
+        <div class="search-box">
+  <input 
+    type="text" 
+    id="searchInput" 
+    placeholder="Buscar perfume..."
+    oninput="aplicarFiltros()"
+  >
+</div>
+<div class="stock-filters">
+  <button onclick="setStockFilter('all')" class="active">Todos</button>
+  <button onclick="setStockFilter('available')">Disponibles</button>
+  <button onclick="setStockFilter('out')">Sin stock</button>
+</div>
+
         <div id="productsContainer"></div>
     </section>
    <button class="help-btn" onclick="ayudaWhatsApp()">
