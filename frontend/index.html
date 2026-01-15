@@ -103,9 +103,10 @@
   >
 </div>
 <div class="stock-filters">
-  <button onclick="setStockFilter('all')" class="active">Todos</button>
-  <button onclick="setStockFilter('available')">Disponibles</button>
-  <button onclick="setStockFilter('out')">Sin stock</button>
+<button onclick="setStockFilter('all', this)" class="active">Todos</button>
+<button onclick="setStockFilter('available', this)">Disponibles</button>
+<button onclick="setStockFilter('out', this)">Sin stock</button>
+
 </div>
 
         <div id="productsContainer"></div>
