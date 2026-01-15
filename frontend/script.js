@@ -32,6 +32,9 @@ let quantities = {};
 let cart = [];
 let discount = 0;
 let appliedCode = null;
+let searchText = "";
+let stockFilter = "all";
+
 
 
 // =========================
@@ -107,10 +110,13 @@ function renderProducts(filtro = "todos") {
 
     products.forEach((p, index) => {
 
-        if (filtro !== "todos") {
-            if (filtro === "sale" && !p.sale) return;
-            if (p.genero !== filtro && filtro !== "sale") return;
-        }
+      // FILTRO POR TEXTO
+if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
+
+// FILTRO POR STOCK
+if (stockFilter === "available" && p.stock <= 0) return;
+if (stockFilter === "out" && p.stock > 0) return;
+
 
         const tieneStock = p.stock > 0;
 
@@ -161,7 +167,21 @@ function renderProducts(filtro = "todos") {
         </div>
         `;
 
-    }); // ← ESTA LLAVE FALTABA
+       }); // fin forEach
+
+    // 👇 SI NO HAY RESULTADOS
+    if (container.innerHTML.trim() === "") {
+        container.innerHTML = `
+          <div style="text-align:center; margin-top:30px;">
+            <p>No encontramos lo que buscás 😕</p>
+            <button class="help-btn" onclick="ayudaWhatsApp()">
+              Escribinos por WhatsApp
+            </button>
+          </div>
+        `;
+    }
+}
+
 }
 
 
@@ -614,5 +634,20 @@ window.filtrar = filtrar;
 document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
 });
+function setStockFilter(type) {
+  stockFilter = type;
+
+  document.querySelectorAll(".stock-filters button")
+    .forEach(b => b.classList.remove("active"));
+
+  event.target.classList.add("active");
+
+  aplicarFiltros();
+}
+
+function aplicarFiltros() {
+  searchText = document.getElementById("searchInput").value.toLowerCase();
+  renderProducts();
+}
 
 
