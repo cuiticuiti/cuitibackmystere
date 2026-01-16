@@ -40,6 +40,7 @@ let stockFilter = "all";
 
 
 
+
 // =========================
 // CARGAR PRODUCTOS
 // =========================
@@ -99,12 +100,13 @@ function filtrar(categoria, btn) {
     currentCategory = categoria;
 
     document.querySelectorAll(".top-buttons button")
-      .forEach(b => b.classList.remove("active"));
+        .forEach(b => b.classList.remove("active"));
 
     if (btn) btn.classList.add("active");
 
     renderProducts();
 }
+
 
 
 
@@ -116,16 +118,16 @@ function renderProducts() {
 
     products.forEach((p, index) => {
 
-        // 🔹 CATEGORÍA
+        // categoría
         if (currentCategory !== "todos") {
             if (currentCategory === "sale" && !p.sale) return;
             if (p.genero !== currentCategory && currentCategory !== "sale") return;
         }
 
-        // 🔹 BUSCADOR
+        // buscador
         if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
 
-        // 🔹 STOCK
+        // stock
         if (stockFilter === "available" && p.stock <= 0) return;
         if (stockFilter === "out" && p.stock > 0) return;
 
@@ -155,6 +157,7 @@ function renderProducts() {
         </div>`;
     }
 }
+
 
 
 
