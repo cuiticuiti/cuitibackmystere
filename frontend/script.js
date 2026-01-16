@@ -27,10 +27,16 @@ const alertBox       = document.getElementById("addAlert");
 // =========================
 // ESTADO DEL CATÁLOGO
 // =========================
+let products = [];
+let quantities = {};
+let cart = [];
+let discount = 0;
+let appliedCode = null;
+
 let currentCategory = "todos";
 let searchText = "";
 let stockFilter = "all";
-;
+
 
 
 
@@ -608,15 +614,17 @@ function setStockFilter(type, btn) {
   document.querySelectorAll(".stock-filters button")
     .forEach(b => b.classList.remove("active"));
 
-  btn.classList.add("active");
+  if (btn) btn.classList.add("active");
 
   renderProducts();
 }
 
 
 function aplicarFiltros() {
-  searchText = document.getElementById("searchInput").value.toLowerCase();
+  const input = document.getElementById("searchInput");
+  searchText = input ? input.value.toLowerCase() : "";
   renderProducts();
 }
+
 
 
