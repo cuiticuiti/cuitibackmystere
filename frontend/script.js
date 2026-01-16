@@ -495,17 +495,25 @@ function prevSlide() { showSlidePro(slideIndex - 1); }
 // Auto-play
 setInterval(() => nextSlide(), 6000);
 
-// Swipe en celular
-let startX = 0;
-document.querySelector(".hero-slider").addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-});
+// =======================
+// SLIDER – FIX SEGURO
+// =======================
+const heroSlider = document.querySelector(".hero-slider");
 
-document.querySelector(".hero-slider").addEventListener("touchend", e => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 60) nextSlide();
-    if (endX - startX > 60) prevSlide();
-});
+if (heroSlider) {
+    let startX = 0;
+
+    heroSlider.addEventListener("touchstart", e => {
+        startX = e.touches[0].clientX;
+    });
+
+    heroSlider.addEventListener("touchend", e => {
+        const endX = e.changedTouches[0].clientX;
+        if (startX - endX > 60) nextSlide();
+        if (endX - startX > 60) prevSlide();
+    });
+}
+
 
 
   
