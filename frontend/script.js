@@ -595,15 +595,7 @@ chatSend.onclick = enviarPregunta;
 chatInput.addEventListener("keypress", e => {
     if (e.key === "Enter") enviarPregunta();
 });
-function cambiarOrden(campo) {
-    if (ordenCampo === campo) {
-        ordenAsc = !ordenAsc;    // invierte asc/desc
-    } else {
-        ordenCampo = campo;
-        ordenAsc = true;
-    }
-    aplicarFiltros();
-}
+
 function ayudaWhatsApp() {
   const msg = encodeURIComponent(
     "Hola! No encontré lo que buscaba en la web, ¿me ayudás?"
