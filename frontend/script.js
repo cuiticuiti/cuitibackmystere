@@ -142,6 +142,8 @@ function renderProducts() {
 
         container.innerHTML += `
         <div class="product-card">
+        ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
+
             <img src="https://mysterefragancias.com/${p.imagen}">
             <div class="product-info">
                 <h3>${p.nombre}</h3>
