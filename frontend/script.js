@@ -151,12 +151,16 @@ function renderProducts() {
 
         container.innerHTML += `
         <div class="product-card">
-            ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
-            <img src="https://mysterefragancias.com/${p.imagen}">
-            <div class="product-info">
-                <h3>${p.nombre}</h3>
-                ${precioHTML}
-                ${
+           ${p.sale && p.precioOriginal
+  ? `
+    <p class="price-old">$${p.precioOriginal.toLocaleString("es-AR")}</p>
+    <p class="price-sale">$${p.precio.toLocaleString("es-AR")}</p>
+  `
+  : `
+    <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
+  `
+}
+
                     tieneStock
                     ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
                     : `<button class="add-btn" onclick="consultarEncargo(${index})">Consultar</button>`
