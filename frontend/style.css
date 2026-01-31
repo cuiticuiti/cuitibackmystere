@@ -607,11 +607,12 @@ footer {
 }
 
 .slide img {
-    width: 33%;
+    width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
+
 .bot-btn {
     position: fixed;
     bottom: 25px;
