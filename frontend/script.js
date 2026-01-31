@@ -105,7 +105,14 @@ function filtrar(categoria, btn) {
     if (btn) btn.classList.add("active");
 
     renderProducts();
+
+    // 👇 SCROLL SUAVE AL CATÁLOGO
+    const catalogo = document.getElementById("catalogo");
+    if (catalogo) {
+        catalogo.scrollIntoView({ behavior: "smooth" });
+    }
 }
+
 
 
 
