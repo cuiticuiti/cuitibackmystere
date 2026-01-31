@@ -121,24 +121,24 @@ function filtrar(categoria, btn) {
 // MOSTRAR PRODUCTOS
 // =========================
 function renderProducts() {
+    if (!container) return;
+
     container.innerHTML = "";
 
     products.forEach((p, index) => {
 
-        // categoría
+        // Filtro categoría
         if (currentCategory !== "todos") {
             if (currentCategory === "sale" && !p.sale) return;
-            if (p.genero !== currentCategory && currentCategory !== "sale") return;
+            if (currentCategory !== "sale" && p.genero !== currentCategory) return;
         }
 
-        // buscador
+        // Buscador
         if (searchText && !p.nombre.toLowerCase().includes(searchText)) return;
 
-        // stock
+        // Stock
         if (stockFilter === "available" && p.stock <= 0) return;
         if (stockFilter === "out" && p.stock > 0) return;
-
-        const tieneStock = p.stock > 0;
 
         const precioHTML = (p.sale && p.precioOriginal)
             ? `
@@ -151,17 +151,13 @@ function renderProducts() {
 
         container.innerHTML += `
         <div class="product-card">
-           ${p.sale && p.precioOriginal
-  ? `
-    <p class="price-old">$${p.precioOriginal.toLocaleString("es-AR")}</p>
-    <p class="price-sale">$${p.precio.toLocaleString("es-AR")}</p>
-  `
-  : `
-    <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
-  `
-}
-
-                    tieneStock
+            ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
+            <img src="https://mysterefragancias.com/${p.imagen}" alt="${p.nombre}">
+            <div class="product-info">
+                <h3>${p.nombre}</h3>
+                ${precioHTML}
+                ${
+                    p.stock > 0
                     ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
                     : `<button class="add-btn" onclick="consultarEncargo(${index})">Consultar</button>`
                 }
@@ -177,7 +173,6 @@ function renderProducts() {
         </div>`;
     }
 }
-
 
 
 
