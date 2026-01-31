@@ -584,38 +584,30 @@ footer {
 /* SLIDER FINAL — 100% FUNCIONAL */
 /* SLIDER FIX DEFINITIVO */
 /* ===== SLIDER SEGURO (NO ROMPE MOBILE) ===== */
+/* ===== SLIDER LIMPIO Y SEGURO ===== */
 .hero-slider {
-   
-    width: 100%;
-    height: 70vh;
-    min-height: 450px;
-    max-height: 850px;
-    overflow: hidden;
-    position: relative; 
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
-   
 
 .slides {
-    display: flex;
-    width: 300%;
-    height: 100%;
-    transition: transform 0.6s ease;
+  display: flex;
+  width: 300%;
+  transition: transform 0.6s ease;
 }
 
-
 .slide {
-   width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-    position: relative;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: auto;
+  display: block;
 }
+
 
 
 .bot-btn {
@@ -739,62 +731,56 @@ footer {
 /* ===== FIX CATÁLOGO MOBILE ===== */
 @media (max-width: 768px) {
 
+  /* Cards */
   .product-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 12px;
   }
 
   .product-card img {
     width: 100%;
-    max-width: 220px;
+    max-width: 180px;
     height: auto;
-    display: block;
+    margin-bottom: 10px;
   }
 
-  .product-info {
-    width: 100%;
+  .product-info h3 {
+    font-size: 16px;
   }
 
-  .add-btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .qty-selector {
+  /* Botones stock */
+  .stock-filters {
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 8px;
+  }
+
+  .stock-filters button {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 16px;
+  }
+
+  /* Precios */
+  .price-old {
+    font-size: 13px;
+  }
+
+  .price-sale {
+    font-size: 17px;
+  }
+
+  /* Botón ayuda */
+  .bot-btn {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 14px;
+    font-size: 14px;
   }
 }
 
-#productsContainer {
-    position: relative;
-    z-index: 10;
-}
-.help-btn {
-  width: 100%;
-  padding: 14px;
-  margin-top: 20px;
-  border-radius: 12px;
-  border: none;
-  background: #8c5e3c;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-.help-btn:hover {
-  background: #73492d;
-}
-.search-box {
-  margin: 20px 0;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid #d4b89f;
-  font-size: 15px;
-}
 
 
 
