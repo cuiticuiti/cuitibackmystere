@@ -781,5 +781,15 @@ footer {
     padding: 10px 14px;
     font-size: 14px;
   }
+    @media (max-width: 768px) {
+  .top-buttons {
+    position: static;
+    transform: none;
+    margin: 15px auto;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
 }
 
