@@ -733,42 +733,53 @@ footer {
 
 @media (max-width: 768px) {
 
-  /* Slider más bajo */
-  .hero-slider {
-    height: 45vh;
-    min-height: 280px;
-  }
-
-  /* Botones superiores más prolijos */
-  .top-buttons {
-    top: 15px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .top-buttons button {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-
-  /* Cards más compactas */
+  /* Cards */
   .product-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     padding: 12px;
-    border-radius: 14px;
   }
 
   .product-card img {
-    max-width: 200px;
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 10px;
   }
 
-  /* Filtros de stock centrados */
+  .product-info h3 {
+    font-size: 16px;
+  }
+
+  /* Botones stock */
   .stock-filters {
-    justify-content: center;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .stock-filters button {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 16px;
+  }
+
+  /* Precios */
+  .price-old {
+    font-size: 13px;
+  }
+
+  .price-sale {
+    font-size: 17px;
+  }
+
+  /* Botón ayuda */
+  .bot-btn {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 14px;
+    font-size: 14px;
   }
 }
-
-
-
-
 
