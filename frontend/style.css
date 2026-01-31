@@ -835,6 +835,9 @@ footer {
     position: relative;
 }
 
+#catalogo {
+  scroll-margin-top: 100px;
+}
 
 
 
