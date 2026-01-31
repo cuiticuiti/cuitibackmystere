@@ -140,33 +140,22 @@ function renderProducts() {
 
         const tieneStock = p.stock > 0;
 
+        const precioHTML = (p.sale && p.precioOriginal)
+            ? `
+                <p class="price-old">$${p.precioOriginal.toLocaleString("es-AR")}</p>
+                <p class="price-sale">$${p.precio.toLocaleString("es-AR")}</p>
+              `
+            : `
+                <p class="price">$${p.precio.toLocaleString("es-AR")}</p>
+              `;
+
         container.innerHTML += `
         <div class="product-card">
-        ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
-
+            ${p.sale ? `<span class="badge-sale">SALE</span>` : ""}
             <img src="https://mysterefragancias.com/${p.imagen}">
             <div class="product-info">
                 <h3>${p.nombre}</h3>
-               ${
-    ${
-  p.sale && p.precioOriginal
-  ? `
-    <p class="price-old">
-      $${p.precioOriginal.toLocaleString("es-AR")}
-    </p>
-    <p class="price-sale">
-      $${p.precio.toLocaleString("es-AR")}
-    </p>
-  `
-  : `
-    <p class="price">
-      $${p.precio.toLocaleString("es-AR")}
-    </p>
-  `
-}
-
-
-
+                ${precioHTML}
                 ${
                     tieneStock
                     ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
@@ -184,7 +173,6 @@ function renderProducts() {
         </div>`;
     }
 }
-
 
 
 
