@@ -148,21 +148,23 @@ function renderProducts() {
             <div class="product-info">
                 <h3>${p.nombre}</h3>
                ${
-    p.sale && p.precioOriginal
-    ? `
-      <p class="price-old">
-        $${p.precioOriginal.toLocaleString("es-AR")}
-      </p>
-      <p class="price-sale">
-        $${p.precio.toLocaleString("es-AR")}
-      </p>
-    `
-    : `
-      <p class="price">
-        $${p.precio.toLocaleString("es-AR")}
-      </p>
-    `
+    ${
+  p.sale && p.precioOriginal
+  ? `
+    <p class="price-old">
+      $${p.precioOriginal.toLocaleString("es-AR")}
+    </p>
+    <p class="price-sale">
+      $${p.precio.toLocaleString("es-AR")}
+    </p>
+  `
+  : `
+    <p class="price">
+      $${p.precio.toLocaleString("es-AR")}
+    </p>
+  `
 }
+
 
 
                 ${
