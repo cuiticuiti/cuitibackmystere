@@ -781,6 +781,42 @@ footer {
   }
 }
 
+@media (max-width: 768px) {
+
+  /* Slider más bajo */
+  .hero-slider {
+    height: 45vh;
+    min-height: 280px;
+  }
+
+  /* Botones superiores más prolijos */
+  .top-buttons {
+    top: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-buttons button {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  /* Cards más compactas */
+  .product-card {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .product-card img {
+    max-width: 200px;
+  }
+
+  /* Filtros de stock centrados */
+  .stock-filters {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
 
 
 
