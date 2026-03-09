@@ -753,17 +753,33 @@ footer {
   }
 
   /* Botones stock */
-  .stock-filters {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
+ .stock-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
 
-  .stock-filters button {
-    font-size: 13px;
-    padding: 6px 12px;
-    border-radius: 16px;
-  }
+.stock-filters button {
+  padding: 10px 18px;
+  border-radius: 25px;
+  border: 2px solid #8c5e3c;
+  cursor: pointer;
+  background: white;
+  color: #8c5e3c;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.stock-filters button:hover {
+  background: #8c5e3c;
+  color: white;
+}
+
+.stock-filters button.active {
+  background: #8c5e3c;
+  color: white;
+}
 
   /* Precios */
   .price-old {
