@@ -9,7 +9,7 @@ body {
 /* NAVBAR --------------------------------------------------- */
 .navbar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 15px 35px;
     background: #fff;
@@ -18,43 +18,40 @@ body {
     top: 0;
     z-index: 1000;
     height: 80px;
+    box-sizing: border-box;
 }
 
-/* LOGO CENTRADO — SIN SER PISADO */
+/* LOGO — ALINEADO NATURALMENTE */
 .centered-logo {
-    font-size: 32px !important;
+    font-size: 28px;
     font-weight: 800;
     letter-spacing: 1px;
     color: #8c5e3c;
 }
 
-/* ELIMINAR .logo viejo — ya no sirve */
-/* .logo { ... }  <-- BORRADO */
-
-/* CART ICON — SOLO UNA VEZ */
+/* CART ICON — RELATIVO AL FLUJO */
 .cart-icon {
-    position: fixed;
-    right: 25px;
-    top: 25px;
+    position: relative;
     background: white;
     padding: 10px 15px;
     border-radius: 12px;
     border: 1px solid #d4b89f;
     cursor: pointer;
     font-weight: bold;
-    z-index: 2000;
+    transition: background-color 0.2s;
 }
 
+.cart-icon:hover {
+    background: #fdfaf7;
+}
 
-/* Botones superiores */
+/* Botones de Categorías Relocalizados */
 .top-buttons {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
 }
 
 .top-buttons button {
@@ -83,6 +80,7 @@ body {
 footer {
     z-index: 10;
 }
+
 .slide {
     width: 100%;
     height: 100%;
@@ -97,7 +95,7 @@ footer {
     top: 50%;
     transform: translateY(-50%);
     font-size: 32px;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     color: #fff;
     width: 45px;
     height: 45px;
@@ -109,44 +107,82 @@ footer {
     z-index: 10;
     transition: 0.25s;
 }
+
 .slide-btn:hover {
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
 }
 
-.prev { left: 10px; }
-.next { right: 10px; }
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
 
 
 /* PRODUCTOS */
+#productsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Por defecto 2 columnas en móvil */
+    gap: 16px;
+    margin-top: 20px;
+}
+
 .product-card {
     background: #ffffff;
     border: 1px solid #e9d9c8;
     border-radius: 12px;
     padding: 15px;
-    margin-bottom: 16px;
     display: flex;
-    gap: 18px;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(140, 94, 60, 0.1);
 }
 
 .product-card img {
-    width: 120px;
-    height: 150px;
-    object-fit: cover;
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
     border-radius: 8px;
     background: #eee;
+    margin-bottom: 12px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    text-align: center;
 }
 
 .product-info h3 {
-    margin: 0;
+    margin: 0 0 8px 0;
     color: #8c5e3c;
     font-weight: bold;
+    font-size: 16px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .price {
     font-weight: bold;
     font-size: 18px;
     color: #a47955;
+    margin-bottom: 12px;
 }
 
 /* CARRITO */
@@ -156,7 +192,7 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     display: none;
     justify-content: center;
     align-items: center;
@@ -165,16 +201,19 @@ footer {
 }
 
 .cart-content {
-    max-height: 85vh; /* límite al alto de pantalla */
+    max-height: 85vh;
+    /* límite al alto de pantalla */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-     border-radius: 18px;
+    border-radius: 18px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
     animation: cartFade .25s ease;
 }
+
 #cartItems {
-    max-height: 45vh;  /* Área de items scrolleable */
+    max-height: 45vh;
+    /* Área de items scrolleable */
     overflow-y: auto;
     margin-bottom: 10px;
     padding-right: 5px;
@@ -197,6 +236,7 @@ footer {
 #payRebill:hover {
     background: #6e472d;
 }
+
 /* BOTÓN DE CERRAR (X) */
 .close-btn {
     font-size: 28px;
@@ -213,6 +253,7 @@ footer {
     color: #5a3a24;
     transform: scale(1.2);
 }
+
 /* BOTÓN "AGREGAR AL CARRITO" — ESTILO LINDO */
 .add-btn {
     background: #8c5e3c;
@@ -230,6 +271,7 @@ footer {
     background: #6e472d;
     transform: scale(1.05);
 }
+
 /* ALERTA DE PRODUCTO AGREGADO */
 .add-alert {
     position: fixed;
@@ -246,9 +288,11 @@ footer {
     transition: opacity .4s ease;
     z-index: 3000;
 }
+
 .add-alert.show {
     opacity: 1;
 }
+
 .qty-selector {
     display: flex;
     align-items: center;
@@ -277,6 +321,7 @@ footer {
     font-weight: bold;
     color: #8c5e3c;
 }
+
 .delete-item {
     color: #b43a3a;
     font-weight: bold;
@@ -290,6 +335,7 @@ footer {
     color: #7a1f1f;
     transform: scale(1.2);
 }
+
 /* ===========================
    DESCUENTO
    =========================== */
@@ -381,6 +427,7 @@ footer {
 .product-card .delete-item:hover {
     color: #9c2f2f;
 }
+
 .top-buttons button.active {
     background: #8c5e3c;
     color: #fff;
@@ -388,14 +435,16 @@ footer {
 
 /* Etiqueta SALE */
 .badge-sale {
-    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
     background: #d9534f;
     color: white;
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: bold;
-    margin-bottom: 6px;
 }
 
 .price {
@@ -421,6 +470,7 @@ footer {
     font-weight: bold;
     margin-top: 6px;
 }
+
 .footer {
     margin-top: 40px;
     padding: 25px 20px;
@@ -451,6 +501,7 @@ footer {
     width: 130px;
     margin-bottom: 15px;
 }
+
 .footer-links {
     list-style: none;
     padding: 0;
@@ -460,6 +511,7 @@ footer {
 .footer-links li {
     margin: 5px 0;
 }
+
 .shipping-box {
     position: relative;
     z-index: 10000 !important;
@@ -479,15 +531,15 @@ footer {
 
 .shipping-option:hover {
     background: #f3e8dc;
-      transform: scale(1.02);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transform: scale(1.02);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .shipping-option.selected {
     background: #d4b48c;
     border-color: #b8936a;
     color: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .ship-title {
@@ -499,11 +551,12 @@ footer {
     font-size: 13px;
     opacity: 0.8;
 }
+
 .shipping-option {
     pointer-events: auto !important;
     cursor: pointer;
     z-index: 9999;
-     transition: transform .15s ease, box-shadow .2s ease;
+    transition: transform .15s ease, box-shadow .2s ease;
 }
 
 
@@ -534,10 +587,18 @@ footer {
     font-size: 20px;
     font-weight: 700;
 }
+
 /* Animación suave */
 @keyframes cartFade {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Scroll suave */
@@ -549,16 +610,19 @@ footer {
 #cartItems::-webkit-scrollbar {
     width: 6px;
 }
+
 #cartItems::-webkit-scrollbar-track {
     background: #f2e7db;
 }
+
 #cartItems::-webkit-scrollbar-thumb {
     background: #c7a98a;
     border-radius: 8px;
 }
 
 /* Botones más modernos */
-.cash-btn, .mp-btn {
+.cash-btn,
+.mp-btn {
     border-radius: 12px;
     font-size: 15px;
 }
@@ -566,6 +630,7 @@ footer {
 .cash-btn {
     background: #e8d3b6;
 }
+
 .cash-btn:hover {
     background: #d4b896;
 }
@@ -574,9 +639,11 @@ footer {
     background: #00a6ff;
     font-weight: 700;
 }
+
 .mp-btn:hover {
     background: #0087cc;
 }
+
 /* Reducir tamaño del slider */
 /* Corrección para centrar las imágenes del slider sin cortar el texto */
 /* SLIDER CORREGIDO */
@@ -586,26 +653,26 @@ footer {
 /* ===== SLIDER SEGURO (NO ROMPE MOBILE) ===== */
 /* ===== SLIDER LIMPIO Y SEGURO ===== */
 .hero-slider {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 .slides {
-  display: flex;
-  width: 300%;
-  transition: transform 0.6s ease;
+    display: flex;
+    width: 300%;
+    transition: transform 0.6s ease;
 }
 
 .slide {
-  width: 100%;
-  flex-shrink: 0;
+    width: 100%;
+    flex-shrink: 0;
 }
 
 .slide img {
-  width: 100%;
-  height: auto;
-  display: block;
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 
@@ -621,8 +688,9 @@ footer {
     font-weight: bold;
     cursor: pointer;
     z-index: 9999;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
+
 .bot-chat {
     max-height: 50vh;
     overflow-y: auto;
@@ -632,6 +700,7 @@ footer {
     background: #faf7f2;
     margin-bottom: 10px;
 }
+
 /* BOTÓN FLOTANTE */
 #chatbot-btn {
     position: fixed;
@@ -643,7 +712,7 @@ footer {
     border-radius: 30px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     z-index: 999;
 }
 
@@ -656,7 +725,7 @@ footer {
     height: 430px;
     background: #fff;
     border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     display: none;
     flex-direction: column;
     overflow: hidden;
@@ -682,7 +751,8 @@ footer {
     background: #f7efe7;
 }
 
-.user-msg, .bot-msg {
+.user-msg,
+.bot-msg {
     max-width: 75%;
     padding: 10px;
     margin: 8px 0;
@@ -726,86 +796,59 @@ footer {
 }
 
 
-/* ===== MOBILE TOUCH FIX DEFINITIVO ===== */
-
-/* ===== FIX CATÁLOGO MOBILE ===== */
-
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
 
 @media (max-width: 768px) {
 
-  /* Cards */
-  .product-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 12px;
-  }
+    /* Imagen adaptada para pantallas pequeñas */
+    .product-card img {
+        height: 140px;
+        margin-bottom: 8px;
+    }
 
-  .product-card img {
-    width: 100%;
-    max-width: 180px;
-    height: auto;
-    margin-bottom: 10px;
-  }
+    .product-info h3 {
+        font-size: 14px;
+        min-height: 38px;
+    }
 
-  .product-info h3 {
-    font-size: 16px;
-  }
+    /* Precios adaptados */
+    .price,
+    .price-sale {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
 
-  /* Botones stock */
- .stock-filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+    .price-old {
+        font-size: 12px;
+    }
+
+    /* Navbar compacto en móvil */
+    .navbar {
+        padding: 10px 20px;
+        height: 70px;
+    }
+
+    .centered-logo {
+        font-size: 22px;
+    }
+
+    .cart-icon {
+        padding: 8px 12px;
+    }
+
+    /* Botón ayuda virtual chatbot */
+    .bot-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        font-size: 14px;
+    }
 }
 
-.stock-filters button {
-  padding: 10px 18px;
-  border-radius: 25px;
-  border: 2px solid #8c5e3c;
-  cursor: pointer;
-  background: white;
-  color: #8c5e3c;
-  font-weight: 600;
-  font-size: 15px;
-  transition: 0.2s;
+/* ===== DESKTOP SCREEN RESOLUTIONS ===== */
+@media (min-width: 769px) {
+    #productsContainer {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 24px;
+    }
 }
-
-.stock-filters button:hover {
-  background: #8c5e3c;
-  color: white;
-}
-
-.stock-filters button.active {
-  background: #8c5e3c;
-  color: white;
-}
-
-  /* Precios */
-  .price-old {
-    font-size: 13px;
-  }
-
-  .price-sale {
-    font-size: 17px;
-  }
-
-  /* Botón ayuda */
-  .bot-btn {
-    bottom: 15px;
-    right: 15px;
-    padding: 10px 14px;
-    font-size: 14px;
-  }
-    @media (max-width: 768px) {
-  .top-buttons {
-    position: static;
-    transform: none;
-    margin: 15px auto;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-}
-
-}
-
