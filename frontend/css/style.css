@@ -1,0 +1,17 @@
+@import url("base/variables.css");
+@import url("base/reset.css");
+@import url("base/typography.css");
+
+@import url("layout/navbar.css");
+@import url("layout/slider.css");
+@import url("layout/catalogo.css");
+@import url("layout/footer.css");
+
+@import url("components/buttons.css");
+@import url("components/product-card.css");
+@import url("components/carrito.css");
+@import url("components/modal.css");
+@import url("components/search.css");
+
+@import url("responsive/tablet.css");
+@import url("responsive/mobile.css");

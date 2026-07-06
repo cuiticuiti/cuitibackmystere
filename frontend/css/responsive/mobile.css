@@ -1,0 +1,52 @@
+/* MOBILE RESPONSIVE ---------------------------------------- */
+@media (max-width: 768px) {
+
+    /* Altura del slider adaptada a móvil */
+    .hero-slider {
+        height: 220px;
+    }
+
+    /* Imagen adaptada para pantallas pequeñas */
+    .product-card img {
+        height: 140px;
+        margin-bottom: 8px;
+    }
+
+    .product-info h3 {
+        font-size: 14px;
+        min-height: 38px;
+    }
+
+    /* Precios adaptados */
+    .price,
+    .price-sale {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .price-old {
+        font-size: 12px;
+    }
+
+    /* Navbar compacto en móvil */
+    .navbar {
+        padding: 10px 20px;
+        height: 70px;
+    }
+
+    .centered-logo {
+        font-size: 22px;
+    }
+
+    .cart-icon {
+        padding: 8px 12px;
+    }
+
+    /* Botón ayuda virtual chatbot */
+    .bot-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}

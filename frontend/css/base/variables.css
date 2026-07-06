@@ -1,0 +1,47 @@
+:root {
+    /* Colores Principales */
+    --color-primary: #8B5E3C;
+    --color-hover: #6B4423;
+    --color-text: #2E2218;
+    --color-border: #E4D8CC;
+
+    /* Fondos */
+    --bg-general: #EFE3D3;
+    --bg-navbar: #E4D0BA;
+    --bg-slider: #D7B894;
+    --bg-cards: #FFFFFF;
+    --bg-footer: #f0e4d6;
+
+    /* Alertas y Precios */
+    --color-sale: #d9534f;
+    --color-old-price: #9b8a7b;
+    --color-new-price: #b63b3b;
+    --color-out-of-stock: #b43a3a;
+    --color-delete: #b43a3a;
+    --color-delete-hover: #7a1f1f;
+    --color-discount-text: #b72b2b;
+
+    /* Botones Categorías y Otros */
+    --btn-category-hover: #e8c9a7;
+    --btn-qty: #e8c9a7;
+    --btn-qty-hover: #d8b38d;
+
+    /* Envíos */
+    --shipping-bg: #f7f1ea;
+    --shipping-border: #d4b48c;
+    --shipping-hover-bg: #f3e8dc;
+    --shipping-selected-bg: #d4b48c;
+    --shipping-selected-border: #b8936a;
+
+    /* Scrollbar y Chatbot */
+    --scrollbar-thumb: #c7a98a;
+    --scrollbar-track: #f2e7db;
+    --chatbot-window-bg: #fff;
+    --chatbot-messages-bg: #f7efe7;
+    --chatbot-user-msg-bg: #d3bba8;
+    --chatbot-bot-msg-bg: #ffffff;
+    --chatbot-chat-bg: #faf7f2;
+
+    /* Tipografía */
+    --font-primary: "Poppins", sans-serif;
+}
