@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,17 +10,17 @@
 
     <!-- SEO BÁSICO -->
     <meta name="description"
-          content="Mystère Fragancias ✨ Perfumes árabes importados en Godoy Cruz, Mendoza. Fragancias para hombre, mujer y unisex, con asesoría personalizada y envíos.">
+        content="Mystère Fragancias ✨ Perfumes árabes importados en Godoy Cruz, Mendoza. Fragancias para hombre, mujer y unisex, con asesoría personalizada y envíos.">
 
     <meta name="keywords"
-          content="perfumes árabes, fragancias, mystere, perfumes mendoza, godoy cruz, club de nuit, bharara king, lattafa, afnan">
+        content="perfumes árabes, fragancias, mystere, perfumes mendoza, godoy cruz, club de nuit, bharara king, lattafa, afnan">
 
     <meta name="author" content="Mystère Fragancias">
 
     <!-- OPEN GRAPH (para WhatsApp, Instagram, Facebook, etc.) -->
     <meta property="og:title" content="Mystère Fragancias | Perfumería árabe en Mendoza">
     <meta property="og:description"
-          content="Somos amantes de la perfumería árabe. Te ayudamos a elegir tu fragancia ideal. Envíos y retiros en Godoy Cruz.">
+        content="Somos amantes de la perfumería árabe. Te ayudamos a elegir tu fragancia ideal. Envíos y retiros en Godoy Cruz.">
     <!-- Poné acá una imagen 1200x630 aprox -->
     <meta property="og:image" content="https://TU-DOMINIO.com/img/og-mystere.jpg">
     <meta property="og:url" content="https://TU-DOMINIO.com/">
@@ -28,8 +29,7 @@
     <!-- TWITTER CARDS (opcional pero suma) -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Mystère Fragancias | Perfumería árabe en Mendoza">
-    <meta name="twitter:description"
-          content="Perfumes árabes importados. Fragancias intensas, elegantes y duraderas.">
+    <meta name="twitter:description" content="Perfumes árabes importados. Fragancias intensas, elegantes y duraderas.">
     <meta name="twitter:image" content="https://TU-DOMINIO.com/img/og-mystere.jpg">
 
     <!-- FAVICON (paso 4) -->
@@ -38,7 +38,7 @@
     <link rel="apple-touch-icon" href="img/favicon-mystere.png">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 
@@ -46,29 +46,20 @@
 <body>
 
     <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo centered-logo">Mystère Fragancias</div>
+    <nav class="navbar">
+        <div class="logo centered-logo">Mystère Fragancias</div>
 
-    <div class="cart-icon" id="openCart">
-        🛒 <span id="cartCount">0</span>
-    </div>
-
-    <div id="addAlert" class="add-alert">Producto agregado al carrito ✔</div>
-</nav>
-
-
-
-        
-    <section class="hero-slider">
-
-        <div class="top-buttons">
-<button onclick="filtrar('sale', this)">SALE</button>
-<button onclick="filtrar('hombre', this)">Hombre</button>
-<button onclick="filtrar('mujer', this)">Mujer</button>
-<button onclick="filtrar('unisex', this)">Unisex</button>
-
-
+        <div class="cart-icon" id="openCart">
+            🛒 <span id="cartCount">0</span>
         </div>
+
+        <div id="addAlert" class="add-alert">Producto agregado al carrito ✔</div>
+    </nav>
+
+
+
+
+    <section class="hero-slider">
 
         <div class="slides">
 
@@ -81,9 +72,9 @@
             </div>
 
             <div class="slide" onclick="filtrar('sale')" style="cursor:pointer;">
-    <img src="img/slide3.jpg" alt="Promos" />
-    <div class="slide-sale-text">🔥 Ver ofertas SALE 🔥</div>
-</div>
+                <img src="img/slide3.jpg" alt="Promos" />
+                <div class="slide-sale-text">🔥 Ver ofertas SALE 🔥</div>
+            </div>
 
 
         </div>
@@ -97,114 +88,112 @@
     <!-- CATÁLOGO -->
     <section id="catalogo" class="section">
         <h2>Catálogo</h2>
+        <div class="top-buttons">
+            <button onclick="filtrar('sale', this)">SALE</button>
+            <button onclick="filtrar('hombre', this)">Hombre</button>
+            <button onclick="filtrar('mujer', this)">Mujer</button>
+            <button onclick="filtrar('unisex', this)">Unisex</button>
+        </div>
         <div class="search-box">
-  <input 
-    type="text" 
-    id="searchInput" 
-    placeholder="Buscar perfume..."
-    oninput="aplicarFiltros()"
-  >
-</div>
-<div class="stock-filters">
-<button onclick="setStockFilter('all', this)" class="active">Todos</button>
-<button onclick="setStockFilter('available', this)">Disponibles</button>
-<button onclick="setStockFilter('out', this)">Sin stock</button>
+            <input type="text" id="searchInput" placeholder="Buscar perfume..." oninput="aplicarFiltros()">
+        </div>
+        <div class="stock-filters">
+            <button onclick="setStockFilter('all', this)" class="active">Todos</button>
+            <button onclick="setStockFilter('available', this)">Disponibles</button>
+            <button onclick="setStockFilter('out', this)">Sin stock</button>
 
-</div>
+        </div>
 
         <div id="productsContainer"></div>
     </section>
-   <button class="help-btn" onclick="ayudaWhatsApp()">
-  ¿No encontrás lo que buscás?
-</button>
+    <button class="help-btn" onclick="ayudaWhatsApp()">
+        ¿No encontrás lo que buscás?
+    </button>
 
 
 
 
-  <!-- MODAL DEL CARRITO -->
-<div id="cartModal" class="cart-modal" style="display: none;">
-  <div class="cart-content">
+    <!-- MODAL DEL CARRITO -->
+    <div id="cartModal" class="cart-modal" style="display: none;">
+        <div class="cart-content">
 
-    <span id="closeCart" class="close-btn">&times;</span>
+            <span id="closeCart" class="close-btn">&times;</span>
 
-    <h2>Tu pedido</h2>
+            <h2>Tu pedido</h2>
 
-    <!-- ITEMS -->
-    <div id="cartItems"></div>
+            <!-- ITEMS -->
+            <div id="cartItems"></div>
 
-    <!-- RESUMEN -->
-    <div class="cart-summary">
+            <!-- RESUMEN -->
+            <div class="cart-summary">
 
-        <p class="subtotal-line">Subtotal: <span id="cartSubtotal">$0</span></p>
+                <p class="subtotal-line">Subtotal: <span id="cartSubtotal">$0</span></p>
 
-        <p class="discount-line" id="cartDiscountLine" style="display:none;">
-            Descuento aplicado: <span id="cartDiscountPercent"></span>%  
-            <span class="discount-amount">(-$<span id="cartDiscountValue"></span>)</span>
-        </p>
+                <p class="discount-line" id="cartDiscountLine" style="display:none;">
+                    Descuento aplicado: <span id="cartDiscountPercent"></span>%
+                    <span class="discount-amount">(-$<span id="cartDiscountValue"></span>)</span>
+                </p>
 
-        <p class="total-line">
-            TOTAL FINAL: <span id="cartTotal">$0</span>
-        </p>
-    </div>
+                <p class="total-line">
+                    TOTAL FINAL: <span id="cartTotal">$0</span>
+                </p>
+            </div>
 
-    <!-- CÓDIGO DE DESCUENTO -->
-    <div class="discount-box">
-        <input id="discountCode" type="text" placeholder="Código de descuento">
-        <button id="applyDiscount">Aplicar</button>
-    </div>
+            <!-- CÓDIGO DE DESCUENTO -->
+            <div class="discount-box">
+                <input id="discountCode" type="text" placeholder="Código de descuento">
+                <button id="applyDiscount">Aplicar</button>
+            </div>
 
-    <!-- MÉTODO DE ENTREGA -->
-    <div class="shipping-box">
+            <!-- MÉTODO DE ENTREGA -->
+            <div class="shipping-box">
 
-        <div class="shipping-option selected" data-value="retiro">
-            <span class="ship-title">Retiro en punto de entrega</span>
-            <span class="ship-desc">Coordinamos por WhatsApp</span>
+                <div class="shipping-option selected" data-value="retiro">
+                    <span class="ship-title">Retiro en punto de entrega</span>
+                    <span class="ship-desc">Coordinamos por WhatsApp</span>
+                </div>
+
+                <div class="shipping-option" data-value="envio">
+                    <span class="ship-title">Envío a domicilio</span>
+                    <span class="ship-desc">Costo según zona</span>
+                </div>
+
+                <input type="hidden" id="shippingMethod" value="retiro">
+            </div>
+
+            <!-- BOTONES DE PAGO -->
+            <button id="payCash" class="cash-btn">
+                Finalizar pedido por WhatsApp
+            </button>
+
+
+
+        </div> <!-- cart-content -->
+    </div> <!-- cartModal -->
+
+
+    <!-- SCRIPTS -->
+
+    <footer class="footer">
+        <div class="footer-content">
+
+            <div class="footer-top">
+                <p>Godoy Cruz, Mendoza</p>
+                <p><a href="https://wa.me/542615161952" target="_blank">WhatsApp: 2615161952</a></p>
+                <p><a href="https://instagram.com/mystere.fragancias" target="_blank">Instagram: @mystere.fragancias</a>
+                </p>
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="faq.html">Preguntas Frecuentes</a></li>
+                <li><a href="politicas.html">Políticas de cambios y envíos</a></li>
+            </ul>
+
         </div>
-
-        <div class="shipping-option" data-value="envio">
-            <span class="ship-title">Envío a domicilio</span>
-            <span class="ship-desc">Costo según zona</span>
-        </div>
-
-        <input type="hidden" id="shippingMethod" value="retiro">
-    </div>
-
-    <!-- BOTONES DE PAGO -->
-   <button id="payCash" class="cash-btn">
-  Finalizar pedido por WhatsApp
-</button>
+    </footer>
 
 
-
-  </div> <!-- cart-content -->
-</div> <!-- cartModal -->
-
-
-<!-- SCRIPTS -->
-
-<footer class="footer">
-
-    <div class="footer-content">
-        <p>Godoy Cruz, Mendoza</p>
-
-        <p>
-            <a href="https://wa.me/542615161952" target="_blank">WhatsApp: 2615161952</a>
-        </p>
-
-        <p>
-            <a href="https://instagram.com/mystere.fragancias" target="_blank">
-                Instagram: @mystere.fragancias
-            </a>
-        </p>
-
-        <ul class="footer-links">
-            <li><a href="faq.html">Preguntas Frecuentes</a></li>
-            <li><a href="politicas.html">Políticas de cambios y envíos</a></li>
-        </ul>
-    </div>
-</footer>
-
-<!-- CHAT BOT -->
+    <!-- CHAT BOT -->
 
     <!-- CHATBOT (DEBE IR ANTES DEL SCRIPT) -->
     <button id="chatbot-open" class="bot-btn">
@@ -224,9 +213,10 @@
     </div>
 
     <!-- EL SCRIPT VA **ÚLTIMO** -->
-   <script src="script.js"></script>
+    <script src="script.js"></script>
 
 
 
 </body>
+
 </html>

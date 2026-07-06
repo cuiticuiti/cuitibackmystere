@@ -1,0 +1,7 @@
+/* TABLET / DESKTOP RESPONSIVE ------------------------------ */
+@media (min-width: 769px) {
+    #productsContainer {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 24px;
+    }
+}
