@@ -5,7 +5,6 @@
     align-items: center;
     padding: 15px 35px;
     background: var(--bg-navbar);
-    border-bottom: 1px solid var(--color-border);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -13,7 +12,7 @@
     box-sizing: border-box;
 }
 
-/* LOGO — ALINEADO NATURALMENTE */
+
 .centered-logo {
     font-size: 28px;
     font-weight: 800;

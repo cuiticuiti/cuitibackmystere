@@ -19,6 +19,11 @@
     animation: cartFade .25s ease;
 }
 
+.cart-content h2 {
+    color: #ffffff;
+}
+
+
 /* ALERTA DE PRODUCTO AGREGADO */
 .add-alert {
     position: fixed;

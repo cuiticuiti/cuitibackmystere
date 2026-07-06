@@ -1,2 +1,37 @@
 /* BÚSQUEDA ------------------------------------------------- */
-/* Reservado para futuros estilos de los controles de búsqueda. */
+
+.search-box {
+    width: 100%;
+    max-width: 480px;
+    margin: 20px auto 25px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-family: var(--font-primary), sans-serif;
+    color: var(--color-text);
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 25px;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(46, 34, 24, 0.04);
+}
+
+#searchInput::placeholder {
+    color: #9b8a7b;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+/* Efecto de enfoque cuando el usuario escribe */
+#searchInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(139, 94, 60, 0.15);
+    background: #ffffff;
+}

@@ -10,19 +10,19 @@ console.log("SCRIPT CARGADO OK");
 const API_URL = "https://cuitibackmystere.onrender.com".replace(/\/$/, "");
 
 
-const container      = document.getElementById("productsContainer");
-const cartModal      = document.getElementById("cartModal");
-const openCartBtn    = document.getElementById("openCart");
-const closeCartBtn   = document.getElementById("closeCart");
-const cartItems      = document.getElementById("cartItems");
-const cartTotal      = document.getElementById("cartTotal");
+const container = document.getElementById("productsContainer");
+const cartModal = document.getElementById("cartModal");
+const openCartBtn = document.getElementById("openCart");
+const closeCartBtn = document.getElementById("closeCart");
+const cartItems = document.getElementById("cartItems");
+const cartTotal = document.getElementById("cartTotal");
 const payCashBtn = document.getElementById("payCash");
 // const payMpBtn   = document.getElementById("payMP");
 
-const discountInput  = document.getElementById("discountCode");
-const discountBtn    = document.getElementById("applyDiscount");
-const cartCountSpan  = document.getElementById("cartCount");
-const alertBox       = document.getElementById("addAlert");
+const discountInput = document.getElementById("discountCode");
+const discountBtn = document.getElementById("applyDiscount");
+const cartCountSpan = document.getElementById("cartCount");
+const alertBox = document.getElementById("addAlert");
 
 // =========================
 // ESTADO DEL CATÁLOGO
@@ -55,7 +55,7 @@ async function cargarProductos() {
         try {
             products = JSON.parse(cache);
             renderProducts();
-        } catch {}
+        } catch { }
     }
 
     // 2️⃣ Pedir al backend en segundo plano
@@ -156,11 +156,10 @@ function renderProducts() {
             <div class="product-info">
                 <h3>${p.nombre}</h3>
                 ${precioHTML}
-                ${
-                    p.stock > 0
-                    ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
-                    : `<button class="add-btn" onclick="consultarEncargo(${index})">Consultar</button>`
-                }
+                ${p.stock > 0
+                ? `<button class="add-btn" onclick="addToCart(${index})">Agregar</button>`
+                : `<button class="add-btn" onclick="consultarEncargo(${index})">Hacer Encargo</button>`
+            }
             </div>
         </div>`;
     });
@@ -237,7 +236,7 @@ function addToCart(i) {
 
     if (p.stock < qty) return alert("No hay suficiente stock.");
 
-   
+
 
     for (let n = 0; n < qty; n++) cart.push(p);
 
@@ -249,7 +248,7 @@ function addToCart(i) {
     setTimeout(() => alertBox.classList.remove("show"), 1500);
 
     quantities[i] = 1;
-    renderProducts(); 
+    renderProducts();
     renderCart();
 }
 
@@ -296,7 +295,7 @@ function renderCart() {
 
 
 
-    
+
 }
 // =========================
 // SELECCIONAR MÉTODO DE ENVÍO
@@ -368,11 +367,11 @@ Coordinamos por WhatsApp.`;
     }
 
     texto += `\n\n¡Gracias! 😊`;
-   guardarPedidoLocal(pedidoId, totalFinal);
+    guardarPedidoLocal(pedidoId, totalFinal);
 
-cart = [];
-cartCountSpan.textContent = 0;
-renderCart();
+    cart = [];
+    cartCountSpan.textContent = 0;
+    renderCart();
 
 
     window.open(
@@ -530,7 +529,7 @@ if (heroSlider) {
 
 
 
-  
+
 
 function appendBotMessage(who, text) {
     const chat = document.getElementById("botChat");
@@ -547,7 +546,7 @@ if (localStorage.getItem("forceCart") === "1") {
 // === CHATBOT ===
 
 const chatOpen = document.getElementById("chatbot-open");
-const chatWin  = document.getElementById("chatbot-window");
+const chatWin = document.getElementById("chatbot-window");
 const chatClose = document.getElementById("chatbot-close");
 const chatMessages = document.getElementById("chatbot-messages");
 const chatInput = document.getElementById("chatbot-input");
@@ -556,7 +555,7 @@ const chatSend = document.getElementById("chatbot-send");
 chatOpen.onclick = () => chatWin.style.display = "flex";
 chatClose.onclick = () => chatWin.style.display = "none";
 
-function addMessage(text, sender="bot") {
+function addMessage(text, sender = "bot") {
     const div = document.createElement("div");
     div.className = sender === "user" ? "user-msg" : "bot-msg";
     div.textContent = text;
@@ -596,10 +595,10 @@ chatInput.addEventListener("keypress", e => {
 });
 
 function ayudaWhatsApp() {
-  const msg = encodeURIComponent(
-    "Hola! No encontré lo que buscaba en la web, ¿me ayudás?"
-  );
-  window.open(`https://wa.me/5492615161952?text=${msg}`, "_blank");
+    const msg = encodeURIComponent(
+        "Hola! No encontré lo que buscaba en la web, ¿me ayudás?"
+    );
+    window.open(`https://wa.me/5492615161952?text=${msg}`, "_blank");
 }
 
 
@@ -626,21 +625,21 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
 });
 function setStockFilter(type, btn) {
-  stockFilter = type;
+    stockFilter = type;
 
-  document.querySelectorAll(".stock-filters button")
-    .forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".stock-filters button")
+        .forEach(b => b.classList.remove("active"));
 
-  if (btn) btn.classList.add("active");
+    if (btn) btn.classList.add("active");
 
-  renderProducts();
+    renderProducts();
 }
 
 
 function aplicarFiltros() {
-  const input = document.getElementById("searchInput");
-  searchText = input ? input.value.toLowerCase() : "";
-  renderProducts();
+    const input = document.getElementById("searchInput");
+    searchText = input ? input.value.toLowerCase() : "";
+    renderProducts();
 }
 
 
