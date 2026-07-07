@@ -82,6 +82,16 @@
     <input id="stock" placeholder="Stock" type="number">
     <input id="imagen" placeholder="Ruta imagen (img/...)" style="width:300px">
 
+    <select id="categoria">
+
+    <option value="PERFUME">Perfume</option>
+
+    <option value="IPHONE">iPhone</option>
+
+    <option value="IMPORTACION">Importación</option>
+
+</select>
+
     <select id="genero">
         <option value="hombre">Hombre</option>
         <option value="mujer">Mujer</option>
@@ -92,8 +102,61 @@
 
     <button onclick="crearProducto()">Guardar</button>
 </div>
+<div id="iphoneFields">
+
+    <select id="estado">
+
+        <option value="">Estado</option>
+
+        <option value="SELLADO">Sellado</option>
+
+        <option value="USADO">Usado Premium</option>
+
+    </select>
+
+    <input id="capacidad" placeholder="128 GB">
+
+    <input id="color" placeholder="Color">
+
+    <input id="bateria" type="number" placeholder="Batería %">
+
+    <input id="garantia" placeholder="Garantía">
+
+</div>
+<select id="tipo">
+    <option value="">Tipo</option>
+    <option value="VAPER">Vaper</option>
+    <option value="AUDIO">Audio</option>
+    <option value="CONSOLA">Consola</option>
+    <option value="ACCESORIO">Accesorio</option>
+    <option value="TELEFONO">Teléfono</option>
+    <option value="OTRO">Otro</option>
+</select>
 
 
+
+<div style="display:flex;gap:15px;margin-bottom:20px;align-items:center;">
+
+    <select id="filtroCategoria" onchange="filtrarTabla()">
+
+        <option value="TODOS">Todos</option>
+
+        <option value="PERFUME">Perfumes</option>
+
+        <option value="IPHONE">iPhone</option>
+
+        <option value="IMPORTACION">Importaciones</option>
+
+    </select>
+
+    <input
+        id="buscarProducto"
+        placeholder="Buscar producto..."
+        onkeyup="filtrarTabla()"
+        style="width:300px;"
+    >
+
+</div>
 <!-- ============================= -->
 <!--      TABLA DE PRODUCTOS      -->
 <!-- ============================= -->
@@ -102,23 +165,34 @@
 
 <table id="tabla">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Género</th>
-        <th>Precio actual</th>
-        <th>Precio anterior</th>
-        <th>Stock</th>
-        <th>Imagen</th>
-        <th>SALE</th>
-        <th>Acciones</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Género</th>
+            <th>Precio actual</th>
+            <th>Precio anterior</th>
+            <th>Stock</th>
+            <th>Imagen</th>
+            <th>SALE</th>
+
+            <th>Categoría</th>
+            <th>Estado</th>
+            <th>Capacidad</th>
+            <th>Color</th>
+            <th>Batería</th>
+            <th>Garantía</th>
+            <th>Tipo</th>
+
+            <th>Acciones</th>
+        </tr>
     </thead>
+
     <tbody></tbody>
 </table>
 
 
 <script>
+    let productos = [];
 const API_URL = "https://cuitibackmystere.onrender.com";
 
 // seguridad
@@ -127,52 +201,212 @@ if (!localStorage.getItem("admin")) {
 }
 
 // cargar productos
-async function cargarProductos() {
+async function cargarProductos(){
+
     const res = await fetch(`${API_URL}/api/admin/productos`);
-    const datos = await res.json();
-    renderTabla(datos);
+
+    productos = await res.json();
+
+    renderTabla(productos);
+
 }
+
+cargarProductos();
+
+function filtrarTabla(){
+
+    const categoria = document.getElementById("filtroCategoria").value;
+
+    const texto = document
+        .getElementById("buscarProducto")
+        .value
+        .toLowerCase();
+
+    let lista = productos;
+
+    if(categoria !== "TODOS"){
+
+       lista = lista.filter(p => {
+
+    if(categoria === "PERFUME"){
+
+        return !p.categoria ||
+               p.categoria === "PERFUME" ||
+               p.categoria === "Perfume";
+
+    }
+
+    return p.categoria === categoria;
+
+});
+
+    }
+
+    lista = lista.filter(p=>
+
+        p.nombre.toLowerCase().includes(texto)
+
+    );
+
+    renderTabla(lista);
+
+}
+
 cargarProductos();
 
 function renderTabla(items) {
+
     const tbody = document.querySelector("#tabla tbody");
+
     tbody.innerHTML = "";
 
     items.forEach(p => {
+
         tbody.innerHTML += `
+
         <tr>
+
             <td>${p.id}</td>
+
             <td><input id="nombre-${p.id}" value="${p.nombre}"></td>
+
             <td>
+
                 <select id="genero-${p.id}">
+
                     <option value="hombre" ${p.genero==="hombre"?"selected":""}>Hombre</option>
+
                     <option value="mujer" ${p.genero==="mujer"?"selected":""}>Mujer</option>
+
                     <option value="unisex" ${p.genero==="unisex"?"selected":""}>Unisex</option>
+
                 </select>
+
             </td>
+
             <td><input id="precio-${p.id}" type="number" value="${p.precio}"></td>
+
             <td><input id="precioAntes-${p.id}" type="number" value="${p.precioAntes ?? ""}"></td>
+
             <td><input id="stock-${p.id}" type="number" value="${p.stock}"></td>
-            <td><input id="imagen-${p.id}" value="${p.imagen}"></td>
-            <td><input id="sale-${p.id}" type="checkbox" ${p.sale?"checked":""}></td>
             <td>
-                <button onclick="guardar(${p.id})">Guardar</button>
-                <button onclick="eliminar(${p.id})" style="background:#b44444">Eliminar</button>
+
+
+
+            
+                
+
+    <img
+        src="${p.imagen}"
+        style="
+            width:55px;
+            height:55px;
+            object-fit:cover;
+            border-radius:8px;
+            display:block;
+            margin:auto;
+            margin-bottom:8px;
+        ">
+
+    <input
+        id="imagen-${p.id}"
+        value="${p.imagen}"
+        style="width:170px;">
+
+</td>
+
+            <td><input id="sale-${p.id}" type="checkbox" ${p.sale ? "checked" : ""}></td>
+
+            <td>
+
+                <select id="categoria-${p.id}">
+
+                    <option value="PERFUME" ${p.categoria==="PERFUME"?"selected":""}>Perfume</option>
+
+                    <option value="IPHONE" ${p.categoria==="IPHONE"?"selected":""}>iPhone</option>
+
+                    <option value="IMPORTACION" ${p.categoria==="IMPORTACION"?"selected":""}>Importación</option>
+
+                </select>
+
             </td>
-        </tr>`;
+
+            <td><input id="estado-${p.id}" value="${p.estado ?? ""}"></td>
+
+            <td><input id="capacidad-${p.id}" value="${p.capacidad ?? ""}"></td>
+
+            <td><input id="color-${p.id}" value="${p.color ?? ""}"></td>
+
+            <td><input id="bateria-${p.id}" type="number" value="${p.bateria ?? ""}"></td>
+
+            <td><input id="garantia-${p.id}" value="${p.garantia ?? ""}"></td>
+
+<td>
+
+<select id="tipo-${p.id}">
+
+<option value="">-</option>
+
+<option value="VAPER" ${p.tipo==="VAPER"?"selected":""}>Vaper</option>
+
+<option value="AUDIO" ${p.tipo==="AUDIO"?"selected":""}>Audio</option>
+
+<option value="CONSOLA" ${p.tipo==="CONSOLA"?"selected":""}>Consola</option>
+
+<option value="ACCESORIO" ${p.tipo==="ACCESORIO"?"selected":""}>Accesorio</option>
+
+<option value="TELEFONO" ${p.tipo==="TELEFONO"?"selected":""}>Teléfono</option>
+
+<option value="OTRO" ${p.tipo==="OTRO"?"selected":""}>Otro</option>
+
+</select>
+
+</td>
+
+
+<td>
+
+<button onclick="guardar(${p.id})">
+
+Guardar
+
+</button>
+
+<button onclick="eliminar(${p.id})"
+style="background:#b44444">
+
+Eliminar
+
+</button>
+
+</td>
+
+        </tr>
+
+        `;
+
     });
+
 }
 
 async function crearProducto() {
     const nuevo = {
-        nombre: nombre.value,
-        precio: +precio.value,
-        precioAntes: +precioAntes.value || null,
-        stock: +stock.value,
-        imagen: imagen.value,
-        genero: genero.value,
-        sale: sale.checked
-    };
+    nombre: nombre.value,
+    precio: +precio.value,
+    precioAntes: +precioAntes.value || null,
+    stock: +stock.value,
+    imagen: imagen.value,
+    genero: genero.value,
+    sale: sale.checked,
+
+    categoria: categoria.value,
+    estado: estado.value,
+    capacidad: capacidad.value,
+    color: color.value,
+    bateria: +bateria.value || null,
+    garantia: garantia.value,
+    tipo: tipo.value,
+};
 
     await fetch(`${API_URL}/api/admin/productos`, {
         method: "POST",
@@ -184,23 +418,53 @@ async function crearProducto() {
 }
 
 async function guardar(id) {
+
     const producto = {
+
         nombre: document.getElementById(`nombre-${id}`).value,
+
         genero: document.getElementById(`genero-${id}`).value,
+
         precio: +document.getElementById(`precio-${id}`).value,
+
         precioAntes: +document.getElementById(`precioAntes-${id}`).value || null,
+
         stock: +document.getElementById(`stock-${id}`).value,
+
         imagen: document.getElementById(`imagen-${id}`).value,
-        sale: document.getElementById(`sale-${id}`).checked
+
+        sale: document.getElementById(`sale-${id}`).checked,
+
+        categoria: document.getElementById(`categoria-${id}`).value,
+
+        estado: document.getElementById(`estado-${id}`).value,
+
+        capacidad: document.getElementById(`capacidad-${id}`).value,
+
+        color: document.getElementById(`color-${id}`).value,
+
+        bateria: +document.getElementById(`bateria-${id}`).value || null,
+
+        garantia: document.getElementById(`garantia-${id}`).value,
+        
+        tipo: document.getElementById(`tipo-${id}`).value,
+
     };
 
+console.log("Categoria:", producto.categoria);
+console.log(producto);
     await fetch(`${API_URL}/api/admin/productos/${id}`, {
+
         method: "PUT",
+
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify(producto)
+
     });
 
     cargarProductos();
+
 }
 
 async function eliminar(id) {
@@ -217,6 +481,30 @@ function logout() {
     localStorage.removeItem("admin");
     window.location.href = "admin-login.html";
 }
+const categoria = document.getElementById("categoria");
+
+
+const iphoneFields = document.getElementById("iphoneFields");
+
+
+
+function actualizarFormulario(){
+
+    iphoneFields.style.display = "none";
+
+    if(categoria.value === "IPHONE"){
+
+        iphoneFields.style.display = "block";
+
+    }
+
+}
+
+
+
+categoria.addEventListener("change", actualizarFormulario);
+
+actualizarFormulario();
 </script>
 </body>
 </html>

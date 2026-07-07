@@ -1,0 +1,106 @@
+/* TARJETAS DE PRODUCTO -------------------------------------- */
+.product-card {
+    background: var(--bg-cards);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(140, 94, 60, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #eee;
+    margin-bottom: 12px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.product-info h3 {
+    margin: 0 0 8px 0;
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 16px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #a47955;
+    margin-bottom: 12px;
+}
+
+/* BOTÓN ELIMINAR ITEM (dentro de la tarjeta de producto) */
+.product-card .delete-item {
+    margin-left: auto;
+    font-size: 18px;
+    cursor: pointer;
+    color: #c05959;
+    padding: 4px;
+}
+
+.product-card .delete-item:hover {
+    color: #9c2f2f;
+}
+
+/* Etiqueta SALE */
+.badge-sale {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+    background: var(--color-sale);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.price {
+    margin: 4px 0;
+}
+
+.price .old-price {
+    text-decoration: line-through;
+    color: var(--color-old-price);
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.price .new-price {
+    color: var(--color-new-price);
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Texto sin stock */
+.out-of-stock {
+    color: var(--color-out-of-stock);
+    font-weight: bold;
+    margin-top: 6px;
+}

@@ -37,6 +37,21 @@ public class AdminProductoController {
                     existente.setStock(p.getStock());
                     existente.setImagen(p.getImagen());
                     existente.setSale(p.isSale());
+                    existente.setGenero(p.getGenero());
+
+existente.setCategoria(p.getCategoria());
+
+existente.setEstado(p.getEstado());
+
+existente.setCapacidad(p.getCapacidad());
+
+existente.setColor(p.getColor());
+
+existente.setBateria(p.getBateria());
+
+existente.setGarantia(p.getGarantia());
+
+existente.setTipo(p.getTipo());
                     return repo.save(existente);
                 })
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));

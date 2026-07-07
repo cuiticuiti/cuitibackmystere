@@ -19,7 +19,10 @@ public class Producto {
 
     private String imagen;
 
-    private String genero = "unisex";         // Nuevo: hombre / mujer / unisex
+    private String genero = "unisex";   
+    
+    private String tipo;
+    // Nuevo: hombre / mujer / unisex
 
     @Column(nullable = false)
     private boolean sale = false;         // Nuevo: true/false
@@ -49,5 +52,70 @@ public class Producto {
 
     public boolean isSale() { return sale; }
     public void setSale(boolean sale) { this.sale = sale; }
+    private String categoria = "PERFUME";
+
+private String estado;       // Sellado o Usado Premium
+
+private String capacidad;    // 128 GB, 256 GB...
+
+private String color;
+
+private Integer bateria;      // 100, 95, 87...
+
+private String garantia;
+public String getCategoria() {
+    return categoria;
+}
+
+public void setCategoria(String categoria) {
+    this.categoria = categoria;
+}
+
+public String getEstado() {
+    return estado;
+}
+
+public void setEstado(String estado) {
+    this.estado = estado;
+}
+
+public String getCapacidad() {
+    return capacidad;
+}
+
+public void setCapacidad(String capacidad) {
+    this.capacidad = capacidad;
+}
+
+public String getColor() {
+    return color;
+}
+
+public void setColor(String color) {
+    this.color = color;
+}
+
+public Integer getBateria() {
+    return bateria;
+}
+
+public void setBateria(Integer bateria) {
+    this.bateria = bateria;
+}
+
+public String getGarantia() {
+    return garantia;
+}
+
+public void setGarantia(String garantia) {
+    this.garantia = garantia;
+}
+public String getTipo() {
+    return tipo;
+}
+
+public void setTipo(String tipo) {
+    this.tipo = tipo;
+}
 }
 

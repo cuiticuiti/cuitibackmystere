@@ -1,0 +1,8 @@
+/* CATÁLOGO ------------------------------------------------- */
+#productsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columnas en móvil */
+    gap: 16px;
+    margin-top: 20px;
+}

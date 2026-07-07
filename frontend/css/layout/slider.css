@@ -1,0 +1,65 @@
+/* SLIDER --------------------------------------------------- */
+.slider-container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-slider {
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    background-color: var(--bg-slider);
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Flechas */
+.slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.25s;
+}
+
+.slide-btn:hover {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}

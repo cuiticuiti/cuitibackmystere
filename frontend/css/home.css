@@ -532,3 +532,109 @@ body{
     font-size:1.15rem;
 
 }
+.btn-primary{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-top:35px;
+
+    padding:16px 34px;
+
+    background:#8c5e3c;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    border-radius:50px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+    box-shadow:0 12px 30px rgba(140,94,60,.18);
+
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-3px);
+
+    background:#6f482f;
+
+}
+.footer{
+
+    margin-top:120px;
+
+    background:#2d2119;
+
+    color:#fff;
+
+}
+
+.footer-container{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr;
+
+    gap:60px;
+
+    padding:70px 8%;
+
+}
+
+.footer h2{
+
+    color:#fff;
+
+    margin-bottom:15px;
+
+}
+
+.footer h4{
+
+    margin-bottom:18px;
+
+}
+
+.footer p{
+
+    color:#d8d8d8;
+
+    line-height:1.8;
+
+}
+
+.footer a{
+
+    display:block;
+
+    color:#d8d8d8;
+
+    text-decoration:none;
+
+    margin-bottom:12px;
+
+}
+
+.footer a:hover{
+
+    color:#fff;
+
+}
+
+.footer-copy{
+
+    border-top:1px solid rgba(255,255,255,.12);
+
+    text-align:center;
+
+    padding:25px;
+
+    color:#bdbdbd;
+
+}
