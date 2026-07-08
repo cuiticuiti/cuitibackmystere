@@ -71,11 +71,13 @@ async function cargarProductos() {
 
         const data = await res.json();
 
-        // 3️⃣ Guardar cache
-        localStorage.setItem("catalogo_cache", JSON.stringify(data));
+// Filtrar solo perfumes
+products = data.filter(p => p.categoria === "PERFUME");
 
-        products = data;
-        renderProducts();
+// Guardar solo perfumes en cache
+localStorage.setItem("catalogo_cache", JSON.stringify(products));
+
+renderProducts();
 
     } catch (e) {
         console.error("ERROR backend:", e);
