@@ -1071,12 +1071,12 @@ body{
 }
 
 .menu-buttons{
-
-    flex-direction:column;
-    width:70%;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
     gap:15px;
-    margin-top: 10px;
-
+    width:100%;
 }
 
 .btn-whatsapp,
@@ -1093,7 +1093,7 @@ body{
 
     flex-direction:column;
     text-align:center;
-    padding:110px 20px 60px;
+    padding:180px 20px 70px;
     min-height:auto;
     gap:35px;
 
