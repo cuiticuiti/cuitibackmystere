@@ -390,6 +390,15 @@ section{
     line-height:1.8;
 
 }
+.faq-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+}
 
 /*==============================
         CTA
@@ -458,9 +467,394 @@ section{
 .footer{
 
     background:#2d2119;
+    color:white;
+    margin-top:120px;
+
+}
+
+.footer-container{
+
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:60px;
+    padding:70px 8%;
+
+}
+
+.footer-brand h2{
+
+    font-size:2rem;
+    margin-bottom:15px;
+
+}
+
+.footer-brand p{
+
+    color:#d6d6d6;
+    line-height:1.8;
+
+}
+
+.footer-links h4,
+.footer-contact h4{
+
+    margin-bottom:18px;
+    font-size:1.2rem;
+
+}
+
+.footer-links a,
+.footer-contact a{
+
+    display:block;
+    color:#d6d6d6;
+    text-decoration:none;
+    margin-bottom:12px;
+    transition:.3s;
+
+}
+
+.footer-links a:hover,
+.footer-contact a:hover{
 
     color:white;
 
-    padding:70px 8%;
+}
+
+.footer-copy{
+
+    border-top:1px solid rgba(255,255,255,.15);
+    padding:25px;
+    text-align:center;
+    color:#cfcfcf;
+
+}
+/*=====================================
+        RESPONSIVE CELULAR
+=====================================*/
+
+@media (max-width:768px){
+
+html,
+body{
+    overflow-x:hidden;
+}
+
+/* NAV */
+
+.navbar{
+    height:auto;
+    padding:18px;
+    flex-direction:column;
+    gap:18px;
+}
+
+.logo{
+    font-size:1.8rem;
+}
+
+.menu{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+}
+
+.btn-whatsapp{
+    width:100%;
+    text-align:center;
+}
+
+/* HERO */
+
+.hero{
+    flex-direction:column;
+    text-align:center;
+    padding:170px 20px 70px;
+    gap:35px;
+}
+
+.hero-left,
+.hero-right{
+    width:100%;
+}
+
+.hero h1{
+    font-size:3rem;
+    line-height:1.1;
+}
+
+.hero p{
+    font-size:1rem;
+    max-width:100%;
+}
+
+.hero-right img{
+    width:100%;
+    max-width:420px;
+    height:auto;
+}
+
+/* TITULOS */
+
+.section-header h2{
+    font-size:2.2rem;
+}
+
+/* TARJETAS */
+
+.imports-grid,
+.steps-grid,
+.benefits-grid{
+    grid-template-columns:1fr;
+    gap:20px;
+}
+
+.import-card,
+.step-card,
+.benefit-card{
+    padding:28px;
+}
+
+/* CTA */
+
+.cta{
+    margin:60px 20px;
+    padding:50px 25px;
+}
+
+.cta h2{
+    font-size:2rem;
+}
+
+.cta button{
+    width:100%;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    padding:50px 20px;
+}
+.faq-grid{
+
+    grid-template-columns:1fr;
+
+}
+.footer-container{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:35px;
+
+}
+
+.footer-brand,
+.footer-links,
+.footer-contact{
+
+    width:100%;
+
+}
+
+.footer h2{
+
+    font-size:2rem;
+
+}
+
+.footer h4{
+
+    margin-bottom:15px;
+
+}
+
+.footer-links a,
+.footer-contact a{
+
+    margin:8px 0;
+
+}
+.productos-grid{
+
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+
+}
+
+.producto-card{
+
+    border-radius:18px;
+
+}
+
+.producto-card img{
+
+    height:150px;
+
+}
+
+.producto-card h3{
+
+    font-size:1rem;
+    margin:15px;
+
+}
+
+.producto-card h2{
+
+    font-size:1.3rem;
+    margin:15px;
+
+}
+
+.producto-card button{
+
+    width:calc(100% - 24px);
+    margin:0 12px 12px;
+    padding:12px;
+
+}
+
+
+}
+/*==============================
+        PRODUCTOS
+==============================*/
+
+.productos-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:30px;
+
+    margin-top:50px;
+
+}
+
+.producto-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+
+    transition:.3s;
+
+}
+
+.producto-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.producto-card img{
+
+    width:100%;
+
+    height:240px;
+
+    object-fit:cover;
+
+}
+
+.producto-card h3{
+
+    margin:20px;
+
+    color:var(--primary);
+
+}
+
+.producto-card p{
+
+    margin:0 20px;
+
+    color:var(--text-light);
+
+}
+
+.producto-card h2{
+
+    margin:20px;
+
+    color:var(--text);
+
+}
+
+.producto-card button{
+
+    width:calc(100% - 40px);
+
+    margin:0 20px 20px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:50px;
+
+    background:var(--primary);
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+}
+.catalog-filters{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    justify-content:center;
+    margin:40px 0;
+
+}
+
+.catalog-filters button{
+
+    padding:14px 28px;
+    border-radius:40px;
+    border:1px solid #ddd;
+    background:white;
+    cursor:pointer;
+    font-weight:600;
+
+}
+
+.catalog-filters button.active{
+
+    background:var(--primary);
+    color:white;
+
+}
+
+.search-box{
+
+    display:flex;
+    justify-content:center;
+    margin-bottom:40px;
+
+}
+
+.search-box input{
+
+    width:450px;
+    max-width:100%;
+    padding:18px;
+    border:none;
+    border-radius:50px;
+    box-shadow:var(--shadow);
+    font-size:16px;
 
 }

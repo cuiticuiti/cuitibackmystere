@@ -378,9 +378,8 @@ body{
 ==========================*/
 
 .catalog{
-
-    padding:120px 8%;
-
+    
+    margin-top: 0;
 }
 
 .catalog-filters{
@@ -995,7 +994,7 @@ body{
 }
 .en-stock{
 
-    color:#00d26a;
+    color:#3DDC84;
 
     font-weight:700;
 
@@ -1038,11 +1037,341 @@ body{
 
 }
 .menu-buttons{
+    flex-direction:row;
+    justify-content:center;
+}
+/*=========================================
+        RESPONSIVE IPHONE
+==========================================*/
+
+@media (max-width:768px){
+
+html,
+body{
+    overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+.navbar{
+
+    flex-direction:column;
+    height:auto;
+    padding:15px 20px;
+    gap:15px;
+
+}
+
+.menu{
+
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+
+}
+
+.menu-buttons{
+
+    flex-direction:column;
+    width:70%;
+    gap:15px;
+    margin-top: 10px;
+
+}
+
+.btn-whatsapp,
+.btn-instagram{
+
+    width:100%;
+    text-align:center;
+
+}
+
+/* HERO */
+
+.hero{
+
+    flex-direction:column;
+    text-align:center;
+    padding:110px 20px 60px;
+    min-height:auto;
+    gap:35px;
+
+}
+
+.hero-left,
+.hero-right{
+
+    width:100%;
+
+}
+
+.hero-right img{
+
+    width:150%;
+    max-width:450px;
+
+}
+
+.hero h1{
+
+    font-size:2.8rem;
+
+}
+
+.hero p{
+
+    font-size:1rem;
+    margin:auto;
+
+}
+
+.hero-stats{
+
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+
+}
+
+/* TARJETAS DE EQUIPOS */
+
+.device-grid{
+
+    grid-template-columns:1fr;
+    gap:20px;
+
+}
+
+.device-card{
+
+    padding:35px;
+
+}
+
+/* BUSCADOR */
+
+.search-box input{
+
+    width:100%;
+
+}
+
+/* FILTROS */
+
+.catalog-filters{
+
+    gap:10px;
+
+}
+
+.catalog-filters button{
+
+    flex:1;
+    min-width:120px;
+
+}
+
+/* PRODUCTOS */
+
+.products-grid{
+
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+
+}
+
+.iphone-card{
+
+    border-radius:16px;
+
+}
+
+.iphone-card img{
+
+    height:170px;
+
+}
+
+.iphone-info{
+
+    padding:15px;
+
+}
+
+.iphone-info h3{
+
+    font-size:1rem;
+
+}
+
+.iphone-info p{
+
+    font-size:.85rem;
+    margin-bottom:4px;
+
+}
+
+.iphone-info h2{
+
+    font-size:1.2rem;
+    margin:12px 0;
+
+}
+
+.iphone-info button{
+
+    padding:12px;
+    font-size:.9rem;
+
+}
+
+/* BENEFICIOS */
+
+.benefits-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+/* COMO COMPRAR */
+
+.process-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+/* ACCESORIOS */
+
+.accessories-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+/* FAQ */
+
+.faq{
+
+    padding:80px 20px;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+    background:#0f0f0f;
+    color:white;
+
+    padding:60px 25px;
+
+}
+
+.footer-container{
+
+    max-width:1100px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    gap:50px;
+
+}
+
+.footer-brand,
+.footer-links,
+.footer-contact{
 
     display:flex;
+    flex-direction:column;
+    gap:12px;
 
+}
+
+.footer h2{
+
+    color:#ffd000;
+    margin-bottom:10px;
+
+}
+
+.footer h4{
+
+    color:#fff;
+    margin-bottom:10px;
+
+}
+
+.footer p,
+.footer a{
+
+    color:#d7d7d7;
+    text-decoration:none;
+    line-height:1.7;
+
+}
+
+.footer a:hover{
+
+    color:#ffd000;
+
+}
+
+.footer-copy{
+
+    margin-top:40px;
+    padding-top:20px;
+
+    border-top:1px solid rgba(255,255,255,.1);
+
+    text-align:center;
+
+    color:#999;
+
+}
+.footer-container{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:35px;
+
+}
+
+.footer-brand,
+.footer-links,
+.footer-contact{
+
+    width:100%;
     align-items:center;
 
-    gap:15px;
+}
+
+.footer p{
+
+    max-width:260px;
+    margin:auto;
+
+}
+
+.footer a{
+
+    display:block;
+    margin:6px 0;
+
+}
+
+.footer-copy{
+
+    text-align:center;
+    margin-top:30px;
+
+}
+
 
 }

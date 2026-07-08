@@ -7,19 +7,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cargarProductos();
 
+    document.querySelectorAll(".catalog-filters button").forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            document.querySelectorAll(".catalog-filters button")
+                .forEach(b => b.classList.remove("active"));
+
+            btn.classList.add("active");
+
+            tipoActual = btn.textContent.trim().toUpperCase();
+
+            renderProductos();
+
+        });
+
+    });
+
 });
 
 async function cargarProductos(){
 
-    const res = await fetch(`${API_URL}/api/productos`);
+    try{
 
-    const datos = await res.json();
+        const res = await fetch(`${API_URL}/api/productos`);
 
-    productos = datos.filter(p => p.categoria === "IMPORTACION");
+        const datos = await res.json();
 
-    renderProductos();
+        productos = datos.filter(p => p.categoria === "IMPORTACION");
+
+        renderProductos();
+
+    }catch(e){
+
+        console.error(e);
+
+    }
 
 }
+
 function renderProductos(){
 
     const contenedor = document.querySelector(".productos-grid");
@@ -28,13 +54,22 @@ function renderProductos(){
 
     contenedor.innerHTML = "";
 
-    productos.forEach(p=>{
+    let lista = productos;
+
+    if(tipoActual !== "TODOS"){
+
+        lista = productos.filter(p =>
+            (p.tipo || "").trim().toUpperCase() === tipoActual
+        );
+
+    }
+
+    lista.forEach(p => {
 
         contenedor.innerHTML += `
-
         <div class="producto-card">
 
-            <img src="${p.imagen}">
+            <img src="${p.imagen}" alt="${p.nombre}">
 
             <h3>${p.nombre}</h3>
 
@@ -49,7 +84,6 @@ function renderProductos(){
             </button>
 
         </div>
-
         `;
 
     });
@@ -58,8 +92,7 @@ function renderProductos(){
 
 function consultar(nombre){
 
-    const mensaje =
-`Hola! Me interesa ${nombre}. ¿Sigue disponible?`;
+    const mensaje = `Hola! Me interesa ${nombre}. ¿Sigue disponible?`;
 
     window.open(
         `https://wa.me/542615161952?text=${encodeURIComponent(mensaje)}`,

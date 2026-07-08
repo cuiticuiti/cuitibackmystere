@@ -15,3 +15,38 @@
 
 @import url("responsive/tablet.css");
 @import url("responsive/mobile.css");
+.home-btn{
+
+    position:absolute;
+    left:20px;
+
+    width:48px;
+    height:48px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#fff;
+    border-radius:14px;
+
+    text-decoration:none;
+    color:#5a4633;
+
+    font-size:26px;
+    font-weight:bold;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+    transition:.3s;
+
+}
+
+.home-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+.centered-logo{
+    margin-left: 100px;
+}

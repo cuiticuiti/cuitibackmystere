@@ -104,23 +104,30 @@ lista.sort((a,b)=>a.nombre.localeCompare(b.nombre));
                 ${p.bateria ? `<p>Batería ${p.bateria}%</p>` : ""}
 
                 <h2>$${p.precio.toLocaleString()}</h2>
-                ${p.stock==0 ?
+               ${p.stock == 0 ?
 
-`<span class="sin-stock">Sin stock</span>`
+`
+<span class="sin-stock">❌ Sin stock</span>
+
+<button onclick="encargar('${p.nombre}')">
+
+    Encargar
+
+</button>
+`
 
 :
 
-`<span class="en-stock">Disponible</span>`
+`
+<span class="en-stock">✅ Disponible</span>
 
+<button onclick="consultar('${p.nombre}')">
+
+    Consultar
+
+</button>
+`
 }
-
-
-                <button onclick="consultar('${p.nombre}')">
-
-                    Consultar
-
-                </button>
-
             </div>
 
         </div>
@@ -135,6 +142,17 @@ function consultar(nombre){
 
     const mensaje =
 `Hola! Me interesa el ${nombre}. ¿Sigue disponible?`;
+
+    window.open(
+        `https://wa.me/542615161952?text=${encodeURIComponent(mensaje)}`,
+        "_blank"
+    );
+
+}
+function encargar(nombre){
+
+    const mensaje =
+`Hola! Quisiera encargar el ${nombre}. ¿Cuánto demora y cuál sería el precio?`;
 
     window.open(
         `https://wa.me/542615161952?text=${encodeURIComponent(mensaje)}`,
