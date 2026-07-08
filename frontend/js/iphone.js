@@ -80,7 +80,9 @@ else if (categoriaActual === "USADOS PREMIUM") {
 }
 else if (categoriaActual === "ACCESORIOS") {
 
-    lista = [];
+    lista = lista.filter(p =>
+        (p.tipo ?? "").toUpperCase() === "ACCESORIO"
+    );
 
 }
 lista.sort((a,b)=>a.nombre.localeCompare(b.nombre));
