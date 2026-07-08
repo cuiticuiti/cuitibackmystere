@@ -69,7 +69,12 @@ async function cargarProductos() {
 
         if (!res.ok) throw new Error("HTTP " + res.status);
 
+       
+       
         const data = await res.json();
+        
+
+
 
 // Filtrar solo perfumes
 products = data.filter(p => p.categoria === "PERFUME");
