@@ -144,7 +144,7 @@ function consultar(nombre){
 `Hola! Me interesa el ${nombre}. ¿Sigue disponible?`;
 
     window.open(
-        `https://wa.me/542615161952?text=${encodeURIComponent(mensaje)}`,
+        `https://wa.me/542616395190?text=${encodeURIComponent(mensaje)}`,
         "_blank"
     );
 
@@ -155,7 +155,7 @@ function encargar(nombre){
 `Hola! Quisiera encargar el ${nombre}. ¿Cuánto demora y cuál sería el precio?`;
 
     window.open(
-        `https://wa.me/542615161952?text=${encodeURIComponent(mensaje)}`,
+        `https://wa.me/542616395190?text=${encodeURIComponent(mensaje)}`,
         "_blank"
     );
 
